@@ -6,8 +6,9 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # データベース設定
-DB_BASE_DIR = Path.joinpath(BASE_DIR, "sqlite3")
-DB_NAME = config("DATABASE_NAME")
+DB_BASE_DIR = Path.joinpath(BASE_DIR, config("DATABSE_DIR"))
+DB_NAME = config("DATABASE_NAME_ACCOUNTING_SYSTEM")
+DB_PATH = Path.joinpath(DB_BASE_DIR, DB_NAME)
 
 
 if __name__ == "__main__":
