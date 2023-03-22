@@ -56,13 +56,22 @@ class ClubMember(BaseModel):
     クラブに入会している利用者を実装します。
 
     Attributes:
-        id (TextField): 会員番号
+        no (TextField): 会員番号
     """
 
     def __init__(self) -> None:
         super().__init__()
-        self.id = TextField()
+        self.no = RealField()
+
+
+def sample_function():
+    return lambda: 1 + 2 * 3 / 4
 
 
 if __name__ == "__main__":
     pass
+    print("Hello World!")
+    print("Hello", "World", "!", sep=" ")
+
+    if True:
+        pass``
