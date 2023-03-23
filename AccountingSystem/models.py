@@ -74,4 +74,6 @@ if __name__ == "__main__":
     print("Hello", "World", "!", sep=" ")
 
     if True:
-        pass``
+        pass
+
+    print("Hello World!")
