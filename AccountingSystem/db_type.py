@@ -1,6 +1,6 @@
 import abc
 
-from fields import IField
+from model import fields
 
 
 class IDbType(metaclass=abc.ABCMeta):
@@ -16,7 +16,7 @@ class IDbType(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
     @abc.abstractclassmethod
-    def validate(self, value: IField) -> bool:
+    def validate(self, value: fields.IField) -> bool:
         """データ型による値チェック(True:正常、False:不正)"""
         raise NotImplementedError()
 
@@ -28,7 +28,7 @@ class Text(IDbType):
     def name(self) -> str:
         return "text"
 
-    def validate(self, value: IField) -> bool:
+    def validate(self, value: fields.IField) -> bool:
         return True
 
 

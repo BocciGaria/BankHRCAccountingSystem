@@ -2,7 +2,7 @@ from datetime import date
 from tkinter import *
 from tkinter import ttk
 
-from commons.const import *
+from const import *
 
 
 class Ledger(Toplevel):
@@ -33,7 +33,9 @@ class JournalEntry(Toplevel):
         self.title("仕訳帳原簿")
 
         # >>>>>DEBUG>>>>>
-        ttk.Label(self, text="JournalEntry(仕訳帳ウィンドウ)", padding=40, font=FONT_FIXED_24).grid()
+        ttk.Label(
+            self, text="JournalEntry(仕訳帳ウィンドウ)", padding=40, font=FONT_FIXED_24
+        ).grid()
         # <<<<<DEBUG<<<<<
 
 
@@ -58,10 +60,16 @@ class TransferSlip(Toplevel):
 
         # Widgets
         fr_outer = ttk.Frame(self)
-        fr_title = ttk.Frame(fr_outer, width=630, height=105, borderwidth=2, relief=SOLID)
-        lbl_title = ttk.Label(fr_title, text="振 替 伝 票", font=FONT_FIXED_30, anchor=CENTER)
+        fr_title = ttk.Frame(
+            fr_outer, width=630, height=105, borderwidth=2, relief=SOLID
+        )
+        lbl_title = ttk.Label(
+            fr_title, text="振 替 伝 票", font=FONT_FIXED_30, anchor=CENTER
+        )
         fr_date = ttk.Frame(fr_outer, width=500, borderwidth=2, relief=SOLID)
-        lbl_date = ttk.Label(fr_date, textvariable=self.var_date, font=FONT_FIXED_24, anchor=CENTER)
+        lbl_date = ttk.Label(
+            fr_date, textvariable=self.var_date, font=FONT_FIXED_24, anchor=CENTER
+        )
         fr_pic = ttk.Frame(fr_outer, width=150, borderwidth=2, relief=SOLID)
         lbl_pic = ttk.Label(fr_pic, text="記入者")
         txt_pic = ttk.Entry(fr_pic, textvariable=self.var_pic)

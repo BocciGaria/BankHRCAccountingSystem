@@ -1,7 +1,7 @@
 import abc
 from typing import Iterable, Union
 
-from database.fields import IField, RealField, TextField
+from . import fields
 
 
 class IModel(metaclass=abc.ABCMeta):
@@ -61,7 +61,7 @@ class ClubMember(BaseModel):
 
     def __init__(self) -> None:
         super().__init__()
-        self.no = RealField()
+        self.no = fields.RealField()
 
 
 def sample_function():
@@ -77,3 +77,8 @@ if __name__ == "__main__":
         pass
 
     print("Hello World!")
+
+
+if __name__ == "__main__":
+    print(__package__)
+    print(__path__)

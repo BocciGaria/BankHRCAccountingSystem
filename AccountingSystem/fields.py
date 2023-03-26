@@ -1,6 +1,6 @@
 import abc
 
-import db_type
+from model import db_type
 
 
 class IField(metaclass=abc.ABCMeta):
@@ -19,7 +19,8 @@ class IField(metaclass=abc.ABCMeta):
 class BaseField(IField):
     """フィールド抽象クラス
 
-    フィールド具象クラスの要求に対する標準処理、その他のインターフェースを定義します。"""
+    フィールド具象クラスの要求に対する標準処理、その他のインターフェースを定義します。
+    """
 
     __type: db_type.IDbType
 
