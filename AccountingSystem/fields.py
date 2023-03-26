@@ -1,6 +1,6 @@
 import abc
 
-from model import db_type
+import db_type
 
 
 class IField(metaclass=abc.ABCMeta):

@@ -1,6 +1,6 @@
 import abc
 
-from model import fields
+import fields
 
 
 class IDbType(metaclass=abc.ABCMeta):

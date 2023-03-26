@@ -1,11 +1,12 @@
 from datetime import date
-from tkinter import *
+import tkinter as tk
+from tkinter.constants import *
 from tkinter import ttk
 
 from const import *
 
 
-class Ledger(Toplevel):
+class Ledger(tk.Toplevel):
     """元帳
     Attributes:
 
@@ -21,7 +22,7 @@ class Ledger(Toplevel):
         # <<<<<DEBUG<<<<<
 
 
-class JournalEntry(Toplevel):
+class JournalEntry(tk.Toplevel):
     """仕訳帳ウィンドウ
     Attributes:
 
@@ -39,7 +40,7 @@ class JournalEntry(Toplevel):
         # <<<<<DEBUG<<<<<
 
 
-class TransferSlip(Toplevel):
+class TransferSlip(tk.Toplevel):
     """振替伝票ウィンドウ
     Attributes:
 
@@ -48,9 +49,9 @@ class TransferSlip(Toplevel):
     def __init__(self, parent, **kwargs):
         super().__init__(parent, **kwargs)
         # Variables
-        self.var_date = StringVar()  # variable for date label
+        self.var_date = tk.StringVar()  # variable for date label
         self.var_date.set(date.today())  # initial value
-        self.var_pic = StringVar()
+        self.var_pic = tk.StringVar()
 
         # Set title of the window
         self.title("振替伝票")

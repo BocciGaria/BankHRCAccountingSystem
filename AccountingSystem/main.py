@@ -4,7 +4,7 @@ from tkinter import ttk
 
 from pathlib import Path
 
-from AccountingSystem.model import *
+import models
 import config
 
 

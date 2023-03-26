@@ -1,6 +1,5 @@
 from pathlib import Path
 import sqlite3
-from sqlite3 import *
 
 
 class Database:
@@ -18,7 +17,7 @@ class Database:
     def path(self) -> Path:
         return self.__path
 
-    def connect(self) -> Connection:
+    def connect(self) -> sqlite3.Connection:
         self.__connection = sqlite3.connect(self.path)
         return self.__connection
 

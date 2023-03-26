@@ -1,7 +1,7 @@
 import abc
-from typing import Iterable, Union
+from typing import *
 
-from . import fields
+import fields
 
 
 class IModel(metaclass=abc.ABCMeta):
