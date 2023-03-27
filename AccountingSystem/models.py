@@ -22,25 +22,25 @@ class IModel(metaclass=abc.ABCMeta):
     #     """主キー"""
     #     raise NotImplementedError()
 
-    @abc.abstractmethod
-    def insert(self):
-        """INSERTメソッド"""
-        raise NotImplementedError()
+    # @abc.abstractmethod
+    # def insert(self):
+    #     """INSERTメソッド"""
+    #     raise NotImplementedError()
 
-    @abc.abstractmethod
-    def select(self):
-        """SELECTメソッド"""
-        raise NotImplementedError()
+    # @abc.abstractmethod
+    # def select(self):
+    #     """SELECTメソッド"""
+    #     raise NotImplementedError()
 
-    @abc.abstractmethod
-    def update(self):
-        """UPDATEメソッド"""
-        raise NotImplementedError()
+    # @abc.abstractmethod
+    # def update(self):
+    #     """UPDATEメソッド"""
+    #     raise NotImplementedError()
 
-    @abc.abstractmethod
-    def delete(self):
-        """DELETEメソッド"""
-        raise NotImplementedError()
+    # @abc.abstractmethod
+    # def delete(self):
+    #     """DELETEメソッド"""
+    #     raise NotImplementedError()
 
 
 class BaseModel(IModel):
