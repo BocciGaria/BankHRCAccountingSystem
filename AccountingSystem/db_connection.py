@@ -3,22 +3,34 @@ from pathlib import Path
 import sqlite3
 from typing import *
 
+from db_command import ISqlCommand
 
-class IDatabaseConnection(abc.ABCMeta):
+
+class IDatabaseConnection(metaclass=abc.ABCMeta):
     """データベース接続インターフェース
 
     データベース接続情報を保持し、接続を管理する
+
+    Properties:
+        command (ISqlCommand): データベースコマンドオブジェクト
     """
 
     @abc.abstractmethod
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__()
+    def __init__(self, con_str: str) -> None:
+        """コンストラクタ
+
+        Args:
+            con_str (str): 接続文字列
+        """
         raise NotImplementedError()
 
     @abc.abstractproperty
-    @property
-    def name(self) -> str:
-        """データベース名"""
+    def command(self) -> ISqlCommand:
+        """SQLコマンドクラスのインスタンスを取得する
+
+        Returns:
+            ISqlCommand: _description_
+        """
         raise NotImplementedError()
 
     @abc.abstractmethod
@@ -58,27 +70,34 @@ class IDatabaseConnection(abc.ABCMeta):
 
 
 class Sqlite3Connection(IDatabaseConnection):
-    """SQLite3データベース接続クラス
+    """SQLite3のデータベース接続クラス
 
-    SQLite3のデータベース接続情報を保持し、接続を管理する
-
-    Attributes:
-        name(str): データベース名
-
+    Properties:
+        command (ISqlCommand): SQLite3のコマンドクラスインスタンス
     """
+
+    __path: Path
+    __connection: sqlite3.Connection
+    __cursor: sqlite3.Cursor
 
     def __init__(self, path: Path):
         self.__path = path
 
     @property
-    def path(self) -> Path:
-        return self.__path
+    def command(self) -> ISqlCommand:
+        return
 
-    def connect(self) -> sqlite3.Connection:
-        self.__connection = sqlite3.connect(self.path)
-        return self.__connection
+    def connect(self) -> None:
+        self.__connection = sqlite3.connect(self.__path)
 
-    # def close(self) -> None:
-    #     if self.__connection is None:
-    #         raise ValueError("接続がありません。")
-    #     self.__connection.close()
+    def open(self) -> None:
+        self.__cursor = self.__connection.cursor()
+
+    def close(self) -> None:
+        self.__connection.close()
+
+    def commit(self) -> None:
+        self.__connection.commit()
+
+    def rollback(self) -> None:
+        self.__connection.rollback()
