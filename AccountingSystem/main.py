@@ -1,13 +1,12 @@
-import sqlite3
-from tkinter import *
+import tkinter as tk
 from tkinter import ttk
-
-from pathlib import Path
-
-import models
-import config
 
 
 if __name__ == "__main__":
-    m1 = models.ClubMember()
-    print(m1.__dict__)
+    root = tk.Tk()
+
+    external_frame = ttk.Frame(root, width=1280, height=600)
+
+    external_frame.grid()
+
+    root.mainloop()
