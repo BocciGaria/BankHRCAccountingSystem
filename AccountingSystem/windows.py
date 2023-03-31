@@ -46,58 +46,104 @@ class TransferSlip(tk.Toplevel):
 
     """
 
+    var_entry_member: tk.StringVar
+
     def __init__(self, parent, **kwargs):
         super().__init__(parent, **kwargs)
-        # Variables
-        self.var_date = tk.StringVar()  # variable for date label
-        self.var_date.set(date.today())  # initial value
-        self.var_pic = tk.StringVar()
+        # ========== メンバー変数の初期化 ==========
+        self.var_entry_member = tk.StringVar()
 
-        # Set title of the window
-        self.title("振替伝票")
-        # DEBUG
-        self.configure(background="green")
-        # /DEBUG
+        """>>>>>FOR DEBUG>>>>>"""
+        ttk.Style().configure(
+            "debug0.TFrame", background="green", borderwidth=2, relief="groove"
+        )
+        ttk.Style().configure(
+            "debug1.TFrame", background="red", borderwidth=2, relief="groove"
+        )
+        ttk.Style().configure(
+            "debug2.TFrame", background="yellow", borderwidth=2, relief="groove"
+        )
+        ttk.Style().configure(
+            "debug0.TLabel", background="blue", borderwidth=2, relief="groove"
+        )
+        ttk.Style().configure(
+            "debug0.TEntry", background="blue", borderwidth=2, relief="groove"
+        )
+        ttk.Style().configure(
+            "debug0.Treeview", background="pale green", borderwidth=2, relief="groove"
+        )
+        """<<<<<FOR DEBUG<<<<<"""
 
-        # Widgets
-        fr_outer = ttk.Frame(self)
-        fr_title = ttk.Frame(
-            fr_outer, width=630, height=105, borderwidth=2, relief=SOLID
+        # ========== コンテンツの生成 ==========
+        # 外枠
+        frame_external = ttk.Frame(self, style="debug0.TFrame")
+        # ヘッダー部
+        frame_header = ttk.Frame(frame_external, style="debug1.TFrame")
+        frame_title = ttk.Frame(
+            frame_header, style="debug2.TFrame", width=630, height=105
         )
-        lbl_title = ttk.Label(
-            fr_title, text="振 替 伝 票", font=FONT_FIXED_30, anchor=CENTER
+        label_title = ttk.Label(
+            frame_title,
+            style="debug0.TLabel",
+            text="振替伝票",
+            font=("System", 18, "underline"),
         )
-        fr_date = ttk.Frame(fr_outer, width=500, borderwidth=2, relief=SOLID)
-        lbl_date = ttk.Label(
-            fr_date, textvariable=self.var_date, font=FONT_FIXED_24, anchor=CENTER
+        frame_date = ttk.Frame(
+            frame_header, style="debug2.TFrame", width=500, height=105
         )
-        fr_pic = ttk.Frame(fr_outer, width=150, borderwidth=2, relief=SOLID)
-        lbl_pic = ttk.Label(fr_pic, text="記入者")
-        txt_pic = ttk.Entry(fr_pic, textvariable=self.var_pic)
+        label_date = ttk.Label(
+            frame_date,
+            style="debug0.TLabel",
+            text=date.today().strftime("%Y/%m/%d"),
+            font=("System", 16),
+        )
+        frame_member_header = ttk.Frame(
+            frame_header, style="debug2.TFrame", width=150, height=40
+        )
+        label_member_header = ttk.Label(
+            frame_member_header,
+            style="debug0.TLabel",
+            text="記入者",
+            font=("System", 11),
+        )
+        frame_member_input = ttk.Frame(
+            frame_header, style="debug2.TFrame", width=150, height=65
+        )
+        entry_member = ttk.Entry(
+            frame_member_input,
+            textvariable=self.var_entry_member,
+            style="debug0.TEntry",
+            width=8,
+        )
+        # 明細部
+        frame_detail = ttk.Frame(frame_external, style="debug1.TFrame")
+        table_detail = ttk.Treeview(frame_detail, style="debug0.Treeview")
 
-        # Geometry management
+        # ========== ジオメトリー設定 ==========
         self.geometry("1280x600")
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_rowconfigure(0, weight=1)
-        fr_outer.grid(column=0, row=0, sticky=(N, E, S, W))
-        fr_outer.grid_columnconfigure(0, weight=1)
-        fr_outer.grid_rowconfigure(0, weight=1)
-        fr_title.grid(column=0, row=0, columnspan=3, rowspan=2, sticky=(N, E, S, W))
-        fr_title.grid_columnconfigure(0, weight=1)
-        fr_title.grid_rowconfigure(0, weight=1)
-        lbl_title.grid(sticky=(N, E, S, W))
-        fr_date.grid(column=3, row=0, columnspan=3, rowspan=2, sticky=(N, E, S, W))
-        fr_date.grid_columnconfigure(0, weight=1)
-        fr_date.grid_rowconfigure(0, weight=1)
-        lbl_date.grid(sticky=(N, E, S, W))
-        fr_pic.grid(column=6, row=0, rowspan=2, sticky=(N, E, S, W))
-        fr_pic.grid_columnconfigure(0, weight=1)
-        fr_pic.grid_rowconfigure(0, weight=1)
-        lbl_pic.grid(column=0, row=0, sticky=(N, E, S, W))
-        txt_pic.grid(column=0, row=1, sticky=(N, E, S, W))
-
-        # DEBUG
-        lbl_title.configure(background="pink")
-        lbl_date.configure(background="blue")
-        lbl_pic.configure(background="violet")
-        # /DEBUG
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=105)
+        self.rowconfigure(1, weight=426)
+        frame_external.grid(column=0, row=0, sticky=(N, E, S, W))
+        frame_external.columnconfigure(0, weight=1)
+        frame_external.rowconfigure(0, weight=1)
+        frame_header.grid(column=0, row=0, sticky=(N, E, S, W))
+        frame_header.columnconfigure(0, weight=630)
+        frame_header.columnconfigure(1, weight=500)
+        frame_header.columnconfigure(2, weight=150)
+        frame_header.rowconfigure(0, weight=40)
+        frame_header.rowconfigure(1, weight=65)
+        frame_title.grid(column=0, row=0, rowspan=2, sticky=(N, E, S, W))
+        label_title.grid(column=0, row=0, sticky=(N, E, S, W))
+        frame_date.grid(column=1, row=0, rowspan=2, sticky=(N, E, S, W))
+        label_date.grid(column=0, row=0, sticky=(N, E, S, W))
+        frame_member_header.grid(column=2, row=0, sticky=(N, E, S, W))
+        label_member_header.grid(column=0, row=0, sticky=(N, E, S, W))
+        frame_member_input.grid(column=2, row=1, sticky=(N, E, S, W))
+        frame_member_input.columnconfigure(0, weight=1)
+        frame_member_input.rowconfigure(0, weight=1)
+        entry_member.grid(column=0, row=0, sticky=(N, E, S, W))
+        frame_detail.grid(column=0, row=1, sticky=(N, E, S, W))
+        frame_detail.columnconfigure(0, weight=1)
+        frame_detail.rowconfigure(0, weight=1)
+        table_detail.grid(column=0, row=0, sticky=(N, E, S, W))
