@@ -2,6 +2,7 @@ from datetime import date
 import tkinter as tk
 from tkinter.constants import *
 from tkinter import ttk
+from typing import *
 
 from const import *
 
@@ -46,12 +47,23 @@ class TransferSlip(tk.Toplevel):
 
     """
 
-    var_entry_member: tk.StringVar
+    var_member: tk.StringVar
+    var_debit_amount: Iterable[tk.IntVar]
+    var_debit_item: Iterable[tk.IntVar]
+    var_summary: Iterable[tk.StringVar]
+    var_credit_item: Iterable[tk.IntVar]
+    var_credit_amount: Iterable[tk.IntVar]
 
     def __init__(self, parent, **kwargs):
         super().__init__(parent, **kwargs)
         # ========== メンバー変数の初期化 ==========
-        self.var_entry_member = tk.StringVar()
+        self.var_member = tk.StringVar()
+        for i in range(0, 5):
+            self.var_debit_amount[i] = tk.IntVar()
+            self.var_debit_item[i] = tk.IntVar()
+            self.var_summary[i] = tk.StringVar()
+            self.var_credit_item[i] = tk.IntVar()
+            self.var_credit_amount[i] = tk.IntVar()
 
         """>>>>>FOR DEBUG>>>>>"""
         ttk.Style().configure(
@@ -111,13 +123,23 @@ class TransferSlip(tk.Toplevel):
         )
         entry_member = ttk.Entry(
             frame_member_input,
-            textvariable=self.var_entry_member,
+            textvariable=self.var_member,
             style="debug0.TEntry",
             width=8,
         )
         # 明細部
         frame_detail = ttk.Frame(frame_external, style="debug1.TFrame")
-        table_detail = ttk.Treeview(frame_detail, style="debug0.Treeview")
+        detail_labels = ("金額", "借方科目", "摘要", "貸方科目", "金額")
+        for i in range(0, detail_labels.count()):
+            ttk.Label(frame_detail, text=detail_labels[i], style="debug0.TLabel").grid(
+                row=0, column=i
+            )
+        for i in range(1, 8):
+            ttk.Entry(
+                textvariable=self.var_debit_amount,
+                validate="key",
+                validatecommand=self.is_digit,
+            )
 
         # ========== ジオメトリー設定 ==========
         self.geometry("1280x600")
@@ -146,4 +168,3 @@ class TransferSlip(tk.Toplevel):
         frame_detail.grid(column=0, row=1, sticky=(N, E, S, W))
         frame_detail.columnconfigure(0, weight=1)
         frame_detail.rowconfigure(0, weight=1)
-        table_detail.grid(column=0, row=0, sticky=(N, E, S, W))
