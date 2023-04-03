@@ -4,6 +4,7 @@ from tkinter.constants import *
 from tkinter import ttk
 from typing import *
 
+from commands import ValidateCommand
 from const import *
 
 
@@ -47,23 +48,30 @@ class TransferSlip(tk.Toplevel):
 
     """
 
+    validate_command: ValidateCommand
     var_member: tk.StringVar
-    var_debit_amount: Iterable[tk.IntVar]
-    var_debit_item: Iterable[tk.IntVar]
-    var_summary: Iterable[tk.StringVar]
-    var_credit_item: Iterable[tk.IntVar]
-    var_credit_amount: Iterable[tk.IntVar]
+    var_debit_amount: list[tk.IntVar]
+    var_debit_item: list[tk.IntVar]
+    var_summary: list[tk.StringVar]
+    var_credit_item: list[tk.IntVar]
+    var_credit_amount: list[tk.IntVar]
 
-    def __init__(self, parent, **kwargs):
+    def __init__(self, parent, root: tk.Tk, **kwargs):
         super().__init__(parent, **kwargs)
         # ========== メンバー変数の初期化 ==========
+        self.validate_command = ValidateCommand(root)
         self.var_member = tk.StringVar()
-        for i in range(0, 5):
-            self.var_debit_amount[i] = tk.IntVar()
-            self.var_debit_item[i] = tk.IntVar()
-            self.var_summary[i] = tk.StringVar()
-            self.var_credit_item[i] = tk.IntVar()
-            self.var_credit_amount[i] = tk.IntVar()
+        self.var_debit_amount = list()
+        self.var_debit_item = list()
+        self.var_summary = list()
+        self.var_credit_item = list()
+        self.var_credit_amount = list()
+        for i in range(0, 7):
+            self.var_debit_amount.append(tk.StringVar())
+            self.var_debit_item.append(tk.StringVar())
+            self.var_summary.append(tk.StringVar())
+            self.var_credit_item.append(tk.StringVar())
+            self.var_credit_amount.append(tk.StringVar())
 
         """>>>>>FOR DEBUG>>>>>"""
         ttk.Style().configure(
@@ -130,16 +138,33 @@ class TransferSlip(tk.Toplevel):
         # 明細部
         frame_detail = ttk.Frame(frame_external, style="debug1.TFrame")
         detail_labels = ("金額", "借方科目", "摘要", "貸方科目", "金額")
-        for i in range(0, detail_labels.count()):
+        for i in range(0, len(detail_labels)):
             ttk.Label(frame_detail, text=detail_labels[i], style="debug0.TLabel").grid(
-                row=0, column=i
+                column=i, row=0
             )
-        for i in range(1, 8):
+        for i in range(0, 7):
             ttk.Entry(
-                textvariable=self.var_debit_amount,
+                frame_detail,
+                textvariable=self.var_debit_amount[i],
                 validate="key",
-                validatecommand=self.is_digit,
+                validatecommand=(self.validate_command.is_digit, "%P"),
+            ).grid(column=0, row=i + 1)
+            ttk.Combobox(
+                frame_detail,
+                textvariable=self.var_debit_item[i],
+            ).grid(column=1, row=i + 1)
+            ttk.Entry(frame_detail, textvariable=self.var_summary).grid(
+                column=2, row=i + 1
             )
+            ttk.Combobox(frame_detail, textvariable=self.var_credit_item[i]).grid(
+                column=3, row=i + 1
+            )
+            ttk.Entry(
+                frame_detail,
+                textvariable=self.var_credit_amount[i],
+                validate="key",
+                validatecommand=(self.validate_command.is_digit, "%P"),
+            ).grid(column=4, row=i + 1)
 
         # ========== ジオメトリー設定 ==========
         self.geometry("1280x600")

@@ -12,7 +12,7 @@ class Menu(ttk.Frame):
         )
 
     def show_transfer_slip(self):
-        TransferSlip(self.master).grid()
+        TransferSlip(self.master, self.master).grid()
 
 
 if __name__ == "__main__":
