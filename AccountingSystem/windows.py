@@ -6,6 +6,7 @@ from typing import *
 
 from commands import ValidateCommand
 from const import *
+from widgets import ITclComposite, TclComposite
 
 
 class Ledger(tk.Toplevel):
@@ -42,13 +43,13 @@ class JournalEntry(tk.Toplevel):
         # <<<<<DEBUG<<<<<
 
 
-class TransferSlip(tk.Toplevel):
+class TransferSlip(tk.Toplevel, TclComposite):
     """振替伝票ウィンドウ
     Attributes:
 
     """
 
-    validate_command: ValidateCommand
+    valid_cmd: ValidateCommand
     var_member: tk.StringVar
     var_debit_amount: list[tk.IntVar]
     var_debit_item: list[tk.IntVar]
@@ -56,10 +57,10 @@ class TransferSlip(tk.Toplevel):
     var_credit_item: list[tk.IntVar]
     var_credit_amount: list[tk.IntVar]
 
-    def __init__(self, parent, root: tk.Tk, **kwargs):
+    def __init__(self, parent: TclComposite, **kwargs):
         super().__init__(parent, **kwargs)
         # ========== メンバー変数の初期化 ==========
-        self.validate_command = ValidateCommand(root)
+        self.valid_cmd = ValidateCommand(self.get_root())
         self.var_member = tk.StringVar()
         self.var_debit_amount = list()
         self.var_debit_item = list()
@@ -147,7 +148,7 @@ class TransferSlip(tk.Toplevel):
                 frame_detail,
                 textvariable=self.var_debit_amount[i],
                 validate="key",
-                validatecommand=(self.validate_command.is_digit, "%P"),
+                validatecommand=(self.valid_cmd.check_input_amount, "%S", "%P"),
             ).grid(column=0, row=i + 1)
             ttk.Combobox(
                 frame_detail,
@@ -163,7 +164,7 @@ class TransferSlip(tk.Toplevel):
                 frame_detail,
                 textvariable=self.var_credit_amount[i],
                 validate="key",
-                validatecommand=(self.validate_command.is_digit, "%P"),
+                validatecommand=(self.valid_cmd.check_input_amount, "%S", "%P"),
             ).grid(column=4, row=i + 1)
 
         # ========== ジオメトリー設定 ==========
@@ -193,3 +194,6 @@ class TransferSlip(tk.Toplevel):
         frame_detail.grid(column=0, row=1, sticky=(N, E, S, W))
         frame_detail.columnconfigure(0, weight=1)
         frame_detail.rowconfigure(0, weight=1)
+
+    def get_master(self) -> ITclComposite:
+        return self.master
