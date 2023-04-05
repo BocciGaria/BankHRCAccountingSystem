@@ -1,5 +1,6 @@
 import abc
 import tkinter as tk
+from tkinter import ttk
 
 
 class ITclComponent(metaclass=abc.ABCMeta):
@@ -35,31 +36,46 @@ class ITclLeaf(ITclComponent, metaclass=abc.ABCMeta):
     """
 
 
-class TclComponent(tk.BaseWidget, ITclComponent):
+class TclComponent(ITclComponent):
     """TclグラフィックComponent具象クラス"""
 
     def get_root(self) -> tk.Tk:
         return self.get_master().get_root()
 
-    def get_master(self) -> ITclComposite:
-        return self.master
 
-
-class TclComposite(tk.BaseWidget, ITclComposite):
+class TclComposite(ITclComposite):
     """Tcl グラフィックComposite具象クラス"""
 
     def get_root(self) -> tk.Tk:
         return self.get_master().get_root()
 
-    def get_master(self) -> ITclComposite:
-        return self.master
 
-
-class TclLeaf(tk.BaseWidget, ITclLeaf):
+class TclLeaf(ITclLeaf):
     """Tcl グラフィックLeaf具象クラス"""
 
     def get_root(self) -> tk.Tk:
         return self.get_master().get_root()
 
-    def get_master(self) -> ITclComposite:
+
+class WrappedTk(tk.Tk, TclComposite):
+    """TclグラフィックCompositeでラップしたTkクラス"""
+
+    def get_root(self) -> tk.Tk:
+        return self
+
+    def get_master(self) -> tk.BaseWidget:
+        return self.master
+
+
+class WrappedToplevel(tk.Toplevel, TclComposite):
+    """TclグラフィックCompositeでラップしたトップレベルクラス"""
+
+    def get_master(self) -> tk.BaseWidget:
+        return self.master
+
+
+class WrappedTFrame(ttk.Frame, TclComposite):
+    """TclグラフィックCompositeでラップしたTフレームクラス"""
+
+    def get_master(self) -> tk.BaseWidget:
         return self.master

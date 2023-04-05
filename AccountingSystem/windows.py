@@ -6,7 +6,7 @@ from typing import *
 
 from commands import ValidateCommand
 from const import *
-from widgets import ITclComposite, TclComposite
+from widgets import ITclComposite, WrappedToplevel
 
 
 class Ledger(tk.Toplevel):
@@ -43,7 +43,7 @@ class JournalEntry(tk.Toplevel):
         # <<<<<DEBUG<<<<<
 
 
-class TransferSlip(tk.Toplevel, TclComposite):
+class TransferSlip(WrappedToplevel):
     """振替伝票ウィンドウ
     Attributes:
 
@@ -57,7 +57,7 @@ class TransferSlip(tk.Toplevel, TclComposite):
     var_credit_item: list[tk.IntVar]
     var_credit_amount: list[tk.IntVar]
 
-    def __init__(self, parent: TclComposite, **kwargs):
+    def __init__(self, parent: ITclComposite, **kwargs):
         super().__init__(parent, **kwargs)
         # ========== メンバー変数の初期化 ==========
         self.valid_cmd = ValidateCommand(self.get_root())
@@ -194,6 +194,3 @@ class TransferSlip(tk.Toplevel, TclComposite):
         frame_detail.grid(column=0, row=1, sticky=(N, E, S, W))
         frame_detail.columnconfigure(0, weight=1)
         frame_detail.rowconfigure(0, weight=1)
-
-    def get_master(self) -> ITclComposite:
-        return self.master
