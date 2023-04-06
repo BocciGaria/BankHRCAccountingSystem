@@ -15,7 +15,7 @@ class ITclComponent(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def get_master(self):
+    def get_master(self) -> tk.BaseWidget:
         """インスタンスの直属の親要素を取得する"""
         raise NotImplementedError()
 
@@ -76,6 +76,13 @@ class WrappedToplevel(tk.Toplevel, TclComposite):
 
 class WrappedTFrame(ttk.Frame, TclComposite):
     """TclグラフィックCompositeでラップしたTフレームクラス"""
+
+    def get_master(self) -> tk.BaseWidget:
+        return self.master
+
+
+class WrappedTLabel(ttk.Label, TclComposite):
+    """TclグラフィックCompositeでラップしたTラベルクラス"""
 
     def get_master(self) -> tk.BaseWidget:
         return self.master
