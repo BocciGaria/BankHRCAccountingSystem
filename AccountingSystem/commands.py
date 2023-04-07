@@ -1,9 +1,10 @@
 import abc
 import tkinter as tk
 from tkinter.constants import *
-from typing import Type, TypeVar
+from typing import Any, Type
 
 from const import *
+from mytyping import CommandSignature, Index, InputAction, ValidateCmdOption, WidgetName
 from widgets import ITclComposite, WrappedTk, WrappedToplevel
 
 
@@ -14,41 +15,108 @@ class ICommand(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def __init__(self, root_window: WrappedTk = None) -> None:
+    def __init__(self, client: ITclComposite = None, receiver: Any = None) -> None:
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def get_signature(self) -> CommandSignature:
+        """コマンドのシグネチャを取得する"""
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def execute(self, *args, **kwargs) -> Any:
+        """コマンドの実行
+
+        コマンド具象クラスの要求に対する処理を実装する
+        """
         raise NotImplementedError()
 
 
+class Command(ICommand):
+    """コマンド抽象クラス"""
+
+    def get_signature(self) -> CommandSignature:
+        return self.execute
+
+
 class ValidateCommand(ICommand):
-    """入力チェッククラス"""
+    """入力チェック抽象クラス"""
 
-    check_input_amount: str
-    is_digit: str
+    cmd_str: str
 
-    def __init__(self, root_window: WrappedTk = None) -> None:
-        self.is_digit = root_window.register(self.__is_digit)
-        self.check_input_amount = root_window.register(self.__check_input_amount)
+    def __init__(self, client: ITclComposite = None, receiver: Any = None) -> None:
+        self.cmd_str = client.get_root().register(self.execute)
 
-    def __is_digit(self, input: str) -> bool:
-        """数値入力チェック"""
-        return input.isdigit()
+    def get_signature(self) -> CommandSignature:
+        return (self.execute, "%d", "%i", "%P", "%s", "%S", "%v", "%V", "%W")
 
-    def __check_input_amount(self, input: str, new_val: str) -> bool:
-        """金額入力チェック"""
-        return (
-            input.isdigit()
-            and len(new_val) <= MAX_LENGTH_INPUT_AMOUNT
-            and not new_val.startswith("0")
-        )
+    def execute(
+        self,
+        d: InputAction,
+        i: Index,
+        P: str,
+        s: str,
+        S: str,
+        v: ValidateCmdOption,
+        V: ValidateCmdOption,
+        w: WidgetName,
+    ) -> bool:
+        super().__execute()
 
 
-class WidgetLifecycleCommand(ICommand):
-    """ウィジェットのライフサイクルコマンドクラス"""
+class DigitValidateCommand(ValidateCommand):
+    """数値入力コマンドクラス"""
+
+    def execute(
+        self,
+        d: InputAction,
+        i: Index,
+        P: str,
+        s: str,
+        S: str,
+        v: ValidateCmdOption,
+        V: ValidateCmdOption,
+        w: WidgetName,
+    ) -> bool:
+        if d != "1":
+            return True
+        return S.isdigit()
+
+
+class UDigitValidateCommand(ValidateCommand):
+    """正の数値入力コマンドクラス"""
+
+    def execute(
+        self,
+        d: InputAction,
+        i: Index,
+        P: str,
+        s: str,
+        S: str,
+        v: ValidateCmdOption,
+        V: ValidateCmdOption,
+        w: WidgetName,
+    ) -> bool:
+        if d != "1":
+            return True
+        return S.isdigit() and not P.startswith("0")
+
+
+class CreateWindowCommand(Command):
+    """ウィンドウ生成コマンドクラス"""
 
     __root_window: WrappedTk
+    __window_type: Type[WrappedToplevel]
 
-    def __init__(self, root_window: WrappedTk = None) -> None:
-        self.__root_window = root_window
+    def __init__(
+        self, client: ITclComposite = None, receiver: Type[WrappedToplevel] = None
+    ) -> None:
+        if client is None:
+            raise ValueError("client is None")
+        if receiver is None:
+            raise ValueError("receiver is None")
+        self.__root_window = client.get_root()
+        self.__window_type = receiver
 
-    def new_window(self, window_type: Type[WrappedToplevel]):
-        """トップレベルオブジェクト生成"""
-        window_type(self.__root_window)
+    def execute(self, *args, **kwargs) -> Any:
+        self.__window_type(self.__root_window)

@@ -4,7 +4,7 @@ from tkinter.constants import *
 from tkinter import ttk
 from typing import *
 
-from commands import ValidateCommand
+from commands import ValidateCommand, UDigitValidateCommand
 from const import *
 from widgets import ITclComposite, WrappedToplevel, WrappedTFrame, WrappedTLabel
 
@@ -49,7 +49,7 @@ class TransferSlip(WrappedToplevel):
 
     """
 
-    valid_cmd: ValidateCommand
+    valid_ammount: UDigitValidateCommand
     var_member: tk.StringVar
     var_debit_amount: list[tk.StringVar]
     var_debit_item: list[tk.StringVar]
@@ -62,7 +62,7 @@ class TransferSlip(WrappedToplevel):
     def __init__(self, parent: ITclComposite, **kwargs):
         super().__init__(parent, **kwargs)
         # ========== メンバー変数の初期化 ==========
-        self.valid_cmd = ValidateCommand(self.get_root())
+        self.valid_ammount = UDigitValidateCommand(self)
         self.var_member = tk.StringVar()
         self.var_debit_amount = list()
         self.var_debit_item = list()
@@ -165,7 +165,7 @@ class TransferSlip(WrappedToplevel):
                 frame_detail,
                 textvariable=self.var_debit_amount[i],
                 validate="key",
-                validatecommand=(self.valid_cmd.check_input_amount, "%S", "%P"),
+                validatecommand=self.valid_ammount.get_signature(),
             ).grid(column=0, row=i + 1, sticky=NSEW)
             ttk.Combobox(
                 frame_detail,
@@ -181,7 +181,7 @@ class TransferSlip(WrappedToplevel):
                 frame_detail,
                 textvariable=self.var_credit_amount[i],
                 validate="key",
-                validatecommand=(self.valid_cmd.check_input_amount, "%S", "%P"),
+                validatecommand=self.valid_ammount.get_signature(),
             ).grid(column=4, row=i + 1, sticky=NSEW)
         # 合計部
         frame_sum = WrappedTFrame(
