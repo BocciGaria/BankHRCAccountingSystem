@@ -3,9 +3,15 @@ import tkinter as tk
 from tkinter.constants import *
 from typing import Any, Type
 
-from const import *
-from mytyping import CommandSignature, Index, InputAction, ValidateCmdOption, WidgetName
-from widgets import ITclComposite, WrappedTk, WrappedToplevel
+from bhrc_accounting.const import *
+from bhrc_accounting.mytyping import (
+    CommandSignature,
+    Index,
+    InputAction,
+    ValidateCmdOption,
+    WidgetName,
+)
+from bhrc_accounting.widgets import ITclComposite, WrappedTk, WrappedToplevel
 
 
 class ICommand(metaclass=abc.ABCMeta):
@@ -48,7 +54,7 @@ class ValidateCommand(ICommand):
         self.cmd_str = client.get_root().register(self.execute)
 
     def get_signature(self) -> CommandSignature:
-        return (self.execute, "%d", "%i", "%P", "%s", "%S", "%v", "%V", "%W")
+        return (self.cmd_str, "%d", "%i", "%P", "%s", "%S", "%v", "%V", "%W")
 
     def execute(
         self,
@@ -61,7 +67,7 @@ class ValidateCommand(ICommand):
         V: ValidateCmdOption,
         w: WidgetName,
     ) -> bool:
-        super().__execute()
+        super().execute()
 
 
 class DigitValidateCommand(ValidateCommand):
@@ -78,9 +84,7 @@ class DigitValidateCommand(ValidateCommand):
         V: ValidateCmdOption,
         w: WidgetName,
     ) -> bool:
-        if d != "1":
-            return True
-        return S.isdigit()
+        return P.isdigit()
 
 
 class UDigitValidateCommand(ValidateCommand):
@@ -97,8 +101,6 @@ class UDigitValidateCommand(ValidateCommand):
         V: ValidateCmdOption,
         w: WidgetName,
     ) -> bool:
-        if d != "1":
-            return True
         return S.isdigit() and not P.startswith("0")
 
 

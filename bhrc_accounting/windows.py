@@ -4,9 +4,14 @@ from tkinter.constants import *
 from tkinter import ttk
 from typing import *
 
-from commands import ValidateCommand, UDigitValidateCommand
-from const import *
-from widgets import ITclComposite, WrappedToplevel, WrappedTFrame, WrappedTLabel
+from bhrc_accounting.commands import ValidateCommand, UDigitValidateCommand
+from bhrc_accounting.const import *
+from bhrc_accounting.widgets import (
+    ITclComposite,
+    WrappedToplevel,
+    WrappedTFrame,
+    WrappedTLabel,
+)
 
 
 class Ledger(tk.Toplevel):
