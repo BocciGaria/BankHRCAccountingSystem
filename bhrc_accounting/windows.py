@@ -8,9 +8,11 @@ from bhrc_accounting.commands import UDigitValidateCommand
 from bhrc_accounting.const import *
 from bhrc_accounting.widgets import (
     ITclComposite,
+    WrappedTCombobox,
+    WrappedTEntry,
+    WrappedTLabel,
     WrappedToplevel,
     WrappedTFrame,
-    WrappedTLabel,
 )
 
 
@@ -23,7 +25,9 @@ class Ledger(tk.Toplevel):
         self.title("元帳")
 
         # >>>>>DEBUG>>>>>
-        ttk.Label(self, text="Ledger(元帳ウィンドウ)", padding=40, font=FONT_FIXED_24).grid()
+        WrappedTLabel(
+            self, text="Ledger(元帳ウィンドウ)", padding=40, font=FONT_FIXED_24
+        ).grid()
         # <<<<<DEBUG<<<<<
 
 
@@ -36,7 +40,7 @@ class JournalEntry(tk.Toplevel):
         self.title("仕訳帳原簿")
 
         # >>>>>DEBUG>>>>>
-        ttk.Label(
+        WrappedTLabel(
             self, text="JournalEntry(仕訳帳ウィンドウ)", padding=40, font=FONT_FIXED_24
         ).grid()
         # <<<<<DEBUG<<<<<
@@ -100,144 +104,140 @@ class TransferSlip(WrappedToplevel):
 
         # ========== コンテンツの生成 ==========
         # 外枠
-        frame_external = ttk.Frame(self, style="debug0.TFrame")
-        frame_external.grid(column=0, row=0)
-        frame_external.columnconfigure(0, weight=1)
-        frame_external.rowconfigure(0, weight=1)
+        frame_outer = WrappedTFrame(self, style="debug0.TFrame")
+        frame_outer.grid(column=0, row=0)
+        frame_outer.columnconfigure(0, weight=1)
+        frame_outer.rowconfigure(0, weight=1)
         # ヘッダー部
-        frame_header = ttk.Frame(frame_external, style="debug1.TFrame")
+        frame_header = WrappedTFrame(frame_outer, style="debug1.TFrame")
         frame_header.grid(column=0, row=0, sticky=NSEW)
         frame_header.columnconfigure(0, weight=630)
         frame_header.columnconfigure(1, weight=500)
         frame_header.columnconfigure(2, weight=150)
-        frame_title = ttk.Frame(frame_header, style="debug2.TFrame", width=630)
+        frame_title = WrappedTFrame(frame_header, style="debug2.TFrame")
         frame_title.grid(column=0, row=0, rowspan=2, sticky=NSEW)
         frame_title.columnconfigure(0, weight=1)
         frame_title.rowconfigure(0, weight=1)
-        label_title = ttk.Label(
+        WrappedTLabel(
             frame_title,
             style="debug0.TLabel",
             text="振替伝票",
             font=("System", 18, "underline"),
-        )
-        label_title.grid(column=0, row=0, sticky=NSEW)
-        frame_date = ttk.Frame(
-            frame_header, style="debug2.TFrame", width=500, height=105
-        )
+            anchor=CENTER,
+        ).grid(column=0, row=0, sticky=NSEW)
+        frame_date = WrappedTFrame(frame_header, style="debug2.TFrame")
         frame_date.columnconfigure(0, weight=1)
         frame_date.rowconfigure(0, weight=1)
         frame_date.grid(column=1, row=0, rowspan=2, sticky=NSEW)
-        label_date = ttk.Label(
+        label_date = WrappedTLabel(
             frame_date,
             style="debug0.TLabel",
             text=date.today().strftime("%Y/%m/%d"),
             font=("System", 16),
+            anchor=CENTER,
         )
         label_date.grid(column=0, row=0, sticky=NSEW)
-        frame_member_header = ttk.Frame(
-            frame_header, style="debug2.TFrame", width=150, height=40
-        )
+        frame_member_header = WrappedTFrame(frame_header, style="debug2.TFrame")
         frame_member_header.grid(column=2, row=0, sticky=NSEW)
         frame_member_header.columnconfigure(0, weight=1)
         frame_member_header.rowconfigure(0, weight=1)
-        label_member_header = ttk.Label(
+        label_member_header = WrappedTLabel(
             frame_member_header,
             style="debug0.TLabel",
             text="記入者",
             font=("System", 11),
+            anchor=CENTER,
         )
         label_member_header.grid(column=0, row=0, sticky=NSEW)
-        frame_member_input = ttk.Frame(frame_header, style="debug2.TFrame", width=150)
+        frame_member_input = WrappedTFrame(frame_header, style="debug2.TFrame")
         frame_member_input.grid(column=2, row=1, sticky=NSEW)
         frame_member_input.columnconfigure(0, weight=1)
         frame_member_input.rowconfigure(0, weight=1)
-        entry_member = ttk.Entry(
+        entry_member = WrappedTEntry(
             frame_member_input,
             textvariable=self.var_member,
             style="debug0.TEntry",
-            width=8,
+            width=10,
         )
         entry_member.grid(column=0, row=0, sticky=NSEW)
         # 明細部
-        frame_detail = ttk.Frame(frame_external, style="debug1.TFrame", width=1280)
-        frame_detail.grid(column=0, row=1)
+        frame_detail = WrappedTFrame(frame_outer, style="debug1.TFrame")
+        frame_detail.grid(column=0, row=1, sticky=NSEW)
         detail_labels = ("金額", "借方科目", "摘要", "貸方科目", "金額")
+        frames_detail_header = list(
+            [
+                WrappedTFrame(frame_detail, style="debug2.TFrame")
+                for i in range(0, len(detail_labels))
+            ]
+        )
         for i in range(0, len(detail_labels)):
-            ttk.Label(frame_detail, text=detail_labels[i], style="debug0.TLabel").grid(
-                column=i, row=0, sticky=NSEW
+            frames_detail_header[i].grid(column=i, row=0, sticky=NSEW)
+            frames_detail_header[i].columnconfigure(0, weight=1)
+            WrappedTLabel(
+                frames_detail_header[i],
+                text=detail_labels[i],
+                style="debug0.TLabel",
+                anchor=CENTER,
+            ).grid(column=0, row=0, sticky=NSEW)
+        frames_detail_cell: List[List[WrappedTFrame]] = list()
+        for i in range(0, 7):
+            frames_detail_cell.append(
+                list(
+                    [
+                        WrappedTFrame(frame_detail, style="debug2.TFrame")
+                        for j in range(0, len(detail_labels))
+                    ]
+                )
             )
         for i in range(0, 7):
-            ttk.Entry(
-                frame_detail,
+            frames_detail_cell[i][0].grid(column=0, row=i + 1, sticky=NSEW)
+            WrappedTEntry(
+                frames_detail_cell[i][0],
                 textvariable=self.var_debit_amount[i],
+                width=12,
                 validate="key",
                 validatecommand=self.valid_ammount.get_signature(),
             ).grid(column=0, row=i + 1, sticky=NSEW)
-            ttk.Combobox(
-                frame_detail,
+            frames_detail_cell[i][1].grid(column=1, row=i + 1, sticky=NSEW)
+            WrappedTCombobox(
+                frames_detail_cell[i][1],
+                width=8,
                 textvariable=self.var_debit_item[i],
             ).grid(column=1, row=i + 1, sticky=NSEW)
-            ttk.Entry(frame_detail, textvariable=self.var_summary).grid(
-                column=2, row=i + 1, sticky=NSEW
-            )
-            ttk.Combobox(frame_detail, textvariable=self.var_credit_item[i]).grid(
-                column=3, row=i + 1, sticky=NSEW
-            )
-            ttk.Entry(
-                frame_detail,
+            frames_detail_cell[i][2].grid(column=2, row=i + 1, sticky=NSEW)
+            WrappedTEntry(
+                frames_detail_cell[i][2], width=40, textvariable=self.var_summary
+            ).grid(column=2, row=i + 1, sticky=NSEW)
+            frames_detail_cell[i][3].grid(column=3, row=i + 1, sticky=NSEW)
+            WrappedTCombobox(
+                frames_detail_cell[i][3],
+                width=8,
+                textvariable=self.var_credit_item[i],
+            ).grid(column=3, row=i + 1, sticky=NSEW)
+            frames_detail_cell[i][4].grid(column=4, row=i + 1, sticky=NSEW)
+            WrappedTEntry(
+                frames_detail_cell[i][4],
                 textvariable=self.var_credit_amount[i],
+                width=12,
                 validate="key",
                 validatecommand=self.valid_ammount.get_signature(),
             ).grid(column=4, row=i + 1, sticky=NSEW)
         # 合計部
-        frame_sum = WrappedTFrame(
-            frame_external, style="debug1.TFrame", width=1280, height=69
+        frame_sum_debit = WrappedTFrame(frame_detail, style="debug2.TFrame")
+        frame_sum_debit.grid(column=0, row=8, sticky=NSEW)
+        frame_sum_debit.columnconfigure(0, weight=1)
+        WrappedTLabel(frame_sum_debit, textvariable=self.var_sum_debit).grid(
+            column=0, row=0, sticky=NSEW
         )
-        frame_sum.grid(column=0, row=2)
-        label_sum_debit = WrappedTLabel(
-            frame_sum, textvariable=self.var_sum_debit, style="debug0.TLabel"
+        frame_sum_title = WrappedTFrame(frame_detail, style="debug2.TFrame")
+        frame_sum_title.grid(column=1, row=8, columnspan=3, sticky=NSEW)
+        frame_sum_title.columnconfigure(0, weight=1)
+        WrappedTLabel(
+            frame_sum_title, text="合計", font=("System", 18, "bold"), anchor=CENTER
+        ).grid(column=0, row=0, sticky=NSEW)
+        frame_sum_credit = WrappedTFrame(frame_detail, style="debug2.TFrame")
+        frame_sum_credit.grid(column=4, row=8, sticky=NSEW)
+        frame_sum_credit.columnconfigure(0, weight=1)
+        WrappedTLabel(frame_sum_credit, textvariable=self.var_sum_credit).grid(
+            column=0, row=0, sticky=NSEW
         )
-        label_sum_debit.grid(column=0, row=0, sticky=NSEW)
-        label_sum_title = WrappedTLabel(
-            frame_sum, text="合計", font=("System", 18, "bold"), style="debug0.TLabel"
-        )
-        label_sum_title.grid(column=1, row=0, sticky=NSEW)
-        label_sum_credit = WrappedTLabel(
-            frame_sum, textvariable=self.var_sum_credit, style="debug0.TLabel"
-        )
-        label_sum_credit.grid(columns=2, row=0, sticky=NSEW)
-
-        # ========== ジオメトリー設定 ==========
-        # self.geometry("1280x600")
-        # self.columnconfigure(0, weight=1)
-        # self.rowconfigure(0, weight=105)
-        # self.rowconfigure(1, weight=426)
-        # self.rowconfigure(2, weight=69)
-        # self.rowconfigure(0, weight=1)
-        # frame_external.columnconfigure(0, weight=1)
-        # frame_external.rowconfigure(0, weight=105)
-        # frame_external.rowconfigure(1, weight=426)
-        # frame_external.rowconfigure(2, weight=1)
-        # frame_header.columnconfigure(0, weight=630)
-        # frame_header.columnconfigure(1, weight=500)
-        # frame_header.columnconfigure(2, weight=150)
-        # frame_header.rowconfigure(0, weight=40)
-        # frame_header.rowconfigure(1, weight=65)
-        # frame_member_input.columnconfigure(0, weight=1)
-        # frame_member_input.rowconfigure(0, weight=1)
-        # frame_detail.columnconfigure(0, weight=230)
-        # frame_detail.columnconfigure(1, weight=180)
-        # frame_detail.columnconfigure(2, weight=460)
-        # frame_detail.columnconfigure(3, weight=180)
-        # frame_detail.columnconfigure(4, weight=230)
-        # frame_detail.rowconfigure(0, weight=41)
-        # frame_detail.rowconfigure(1, weight=55)
-        # frame_detail.rowconfigure(2, weight=55)
-        # frame_detail.rowconfigure(3, weight=55)
-        # frame_detail.rowconfigure(4, weight=55)
-        # frame_detail.rowconfigure(5, weight=55)
-        # frame_detail.rowconfigure(6, weight=55)
-        # frame_detail.rowconfigure(7, weight=55)
-        # frame_sum.columnconfigure(0, weight=230)
-        # frame_sum.columnconfigure(1, weight=820)
-        # frame_sum.columnconfigure(2, weight=230)

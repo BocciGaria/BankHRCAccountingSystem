@@ -72,33 +72,26 @@ class WrappedTk(tk.Tk, TclComposite):
     def get_root(self) -> tk.Tk:
         return self
 
-    # def get_master(self) -> tk.Widget:
-    #     return self.master
-
 
 class WrappedToplevel(tk.Toplevel, TclComposite):
     """TclグラフィックCompositeでラップしたトップレベルクラス"""
-
-    # def get_master(self) -> tk.Widget:
-    #     return self.master
 
 
 class WrappedTFrame(ttk.Frame, TclComposite):
     """TclグラフィックCompositeでラップしたTフレームクラス"""
 
-    # def get_master(self) -> tk.Widget:
-    #     return self.master
-
 
 class WrappedTLabel(ttk.Label, TclComposite):
     """TclグラフィックCompositeでラップしたTラベルクラス"""
-
-    # def get_master(self) -> tk.Widget:
-    #     return self.master
 
 
 class WrappedTButton(ttk.Button, TclLeaf):
     """TclグラフィックLeafでラップしたTボタンクラス"""
 
-    # def get_master(self) -> tk.Widget:
-    #     return self.master
+
+class WrappedTEntry(ttk.Entry, TclLeaf):
+    """TclグラフィックLeafでラップしたTエントリークラス"""
+
+
+class WrappedTCombobox(ttk.Combobox, TclLeaf):
+    """TclグラフィックLeafでラップしたTコンボボックスクラス"""
