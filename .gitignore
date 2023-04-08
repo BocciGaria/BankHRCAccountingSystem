@@ -168,4 +168,4 @@ cython_debug/
 sqlite3/*
 
 # Visual Studio Code
-.vscode/*
+.vscode

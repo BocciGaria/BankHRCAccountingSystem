@@ -4,7 +4,7 @@ from tkinter.constants import *
 from tkinter import ttk
 from typing import *
 
-from bhrc_accounting.commands import ValidateCommand, UDigitValidateCommand
+from bhrc_accounting.commands import UDigitValidateCommand
 from bhrc_accounting.const import *
 from bhrc_accounting.widgets import (
     ITclComposite,
@@ -15,10 +15,7 @@ from bhrc_accounting.widgets import (
 
 
 class Ledger(tk.Toplevel):
-    """元帳
-    Attributes:
-
-    """
+    """元帳ウィンドウ"""
 
     def __init__(self, parent, **kwargs):
         super().__init__(parent, **kwargs)
@@ -31,10 +28,7 @@ class Ledger(tk.Toplevel):
 
 
 class JournalEntry(tk.Toplevel):
-    """仕訳帳ウィンドウ
-    Attributes:
-
-    """
+    """仕訳帳ウィンドウ"""
 
     def __init__(self, parent, **kwargs):
         super().__init__(parent, **kwargs)
@@ -106,15 +100,20 @@ class TransferSlip(WrappedToplevel):
 
         # ========== コンテンツの生成 ==========
         # 外枠
-        frame_external = ttk.Frame(self, style="debug0.TFrame", width=1280, height=600)
+        frame_external = ttk.Frame(self, style="debug0.TFrame")
         frame_external.grid(column=0, row=0)
+        frame_external.columnconfigure(0, weight=1)
+        frame_external.rowconfigure(0, weight=1)
         # ヘッダー部
         frame_header = ttk.Frame(frame_external, style="debug1.TFrame")
         frame_header.grid(column=0, row=0, sticky=NSEW)
-        frame_title = ttk.Frame(
-            frame_header, style="debug2.TFrame", width=630, height=105
-        )
+        frame_header.columnconfigure(0, weight=630)
+        frame_header.columnconfigure(1, weight=500)
+        frame_header.columnconfigure(2, weight=150)
+        frame_title = ttk.Frame(frame_header, style="debug2.TFrame", width=630)
         frame_title.grid(column=0, row=0, rowspan=2, sticky=NSEW)
+        frame_title.columnconfigure(0, weight=1)
+        frame_title.rowconfigure(0, weight=1)
         label_title = ttk.Label(
             frame_title,
             style="debug0.TLabel",
@@ -125,6 +124,8 @@ class TransferSlip(WrappedToplevel):
         frame_date = ttk.Frame(
             frame_header, style="debug2.TFrame", width=500, height=105
         )
+        frame_date.columnconfigure(0, weight=1)
+        frame_date.rowconfigure(0, weight=1)
         frame_date.grid(column=1, row=0, rowspan=2, sticky=NSEW)
         label_date = ttk.Label(
             frame_date,
@@ -137,6 +138,8 @@ class TransferSlip(WrappedToplevel):
             frame_header, style="debug2.TFrame", width=150, height=40
         )
         frame_member_header.grid(column=2, row=0, sticky=NSEW)
+        frame_member_header.columnconfigure(0, weight=1)
+        frame_member_header.rowconfigure(0, weight=1)
         label_member_header = ttk.Label(
             frame_member_header,
             style="debug0.TLabel",
@@ -144,10 +147,10 @@ class TransferSlip(WrappedToplevel):
             font=("System", 11),
         )
         label_member_header.grid(column=0, row=0, sticky=NSEW)
-        frame_member_input = ttk.Frame(
-            frame_header, style="debug2.TFrame", width=150, height=65
-        )
+        frame_member_input = ttk.Frame(frame_header, style="debug2.TFrame", width=150)
         frame_member_input.grid(column=2, row=1, sticky=NSEW)
+        frame_member_input.columnconfigure(0, weight=1)
+        frame_member_input.rowconfigure(0, weight=1)
         entry_member = ttk.Entry(
             frame_member_input,
             textvariable=self.var_member,
@@ -156,9 +159,7 @@ class TransferSlip(WrappedToplevel):
         )
         entry_member.grid(column=0, row=0, sticky=NSEW)
         # 明細部
-        frame_detail = ttk.Frame(
-            frame_external, style="debug1.TFrame", width=1280, height=426
-        )
+        frame_detail = ttk.Frame(frame_external, style="debug1.TFrame", width=1280)
         frame_detail.grid(column=0, row=1)
         detail_labels = ("金額", "借方科目", "摘要", "貸方科目", "金額")
         for i in range(0, len(detail_labels)):
@@ -217,26 +218,26 @@ class TransferSlip(WrappedToplevel):
         # frame_external.rowconfigure(0, weight=105)
         # frame_external.rowconfigure(1, weight=426)
         # frame_external.rowconfigure(2, weight=1)
-        frame_header.columnconfigure(0, weight=630)
-        frame_header.columnconfigure(1, weight=500)
-        frame_header.columnconfigure(2, weight=150)
-        frame_header.rowconfigure(0, weight=40)
-        frame_header.rowconfigure(1, weight=65)
-        frame_member_input.columnconfigure(0, weight=1)
-        frame_member_input.rowconfigure(0, weight=1)
-        frame_detail.columnconfigure(0, weight=230)
-        frame_detail.columnconfigure(1, weight=180)
-        frame_detail.columnconfigure(2, weight=460)
-        frame_detail.columnconfigure(3, weight=180)
-        frame_detail.columnconfigure(4, weight=230)
-        frame_detail.rowconfigure(0, weight=41)
-        frame_detail.rowconfigure(1, weight=55)
-        frame_detail.rowconfigure(2, weight=55)
-        frame_detail.rowconfigure(3, weight=55)
-        frame_detail.rowconfigure(4, weight=55)
-        frame_detail.rowconfigure(5, weight=55)
-        frame_detail.rowconfigure(6, weight=55)
-        frame_detail.rowconfigure(7, weight=55)
-        frame_sum.columnconfigure(0, weight=230)
-        frame_sum.columnconfigure(1, weight=820)
-        frame_sum.columnconfigure(2, weight=230)
+        # frame_header.columnconfigure(0, weight=630)
+        # frame_header.columnconfigure(1, weight=500)
+        # frame_header.columnconfigure(2, weight=150)
+        # frame_header.rowconfigure(0, weight=40)
+        # frame_header.rowconfigure(1, weight=65)
+        # frame_member_input.columnconfigure(0, weight=1)
+        # frame_member_input.rowconfigure(0, weight=1)
+        # frame_detail.columnconfigure(0, weight=230)
+        # frame_detail.columnconfigure(1, weight=180)
+        # frame_detail.columnconfigure(2, weight=460)
+        # frame_detail.columnconfigure(3, weight=180)
+        # frame_detail.columnconfigure(4, weight=230)
+        # frame_detail.rowconfigure(0, weight=41)
+        # frame_detail.rowconfigure(1, weight=55)
+        # frame_detail.rowconfigure(2, weight=55)
+        # frame_detail.rowconfigure(3, weight=55)
+        # frame_detail.rowconfigure(4, weight=55)
+        # frame_detail.rowconfigure(5, weight=55)
+        # frame_detail.rowconfigure(6, weight=55)
+        # frame_detail.rowconfigure(7, weight=55)
+        # frame_sum.columnconfigure(0, weight=230)
+        # frame_sum.columnconfigure(1, weight=820)
+        # frame_sum.columnconfigure(2, weight=230)

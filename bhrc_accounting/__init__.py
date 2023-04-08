@@ -19,8 +19,13 @@ class Menu(WrappedTFrame):
         ).grid(column=0, row=0, padx=100, pady=50)
 
 
-root = App()
+def main():
+    root = App()
 
-Menu(root).grid()
+    Menu(root).grid()
 
-root.mainloop()
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()
