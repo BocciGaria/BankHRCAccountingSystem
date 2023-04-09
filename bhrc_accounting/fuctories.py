@@ -1,8 +1,4 @@
-from typing import Callable, Dict, Type, TypeVar
-
-
-# 新しい型ヒントの定義
-TypeName = TypeVar("TypeName", str)
+from typing import Callable, Dict, Type
 
 
 class WrappedTclFactory:
@@ -11,9 +7,16 @@ class WrappedTclFactory:
     CompositeパターンでラップされたTclオブジェクトの生成処理を実装します
     """
 
-    __widget_dictionary: Dict[TypeName, Callable]
+    __widget_dictionary: Dict[Type, Callable]
 
     def __init__(self) -> None:
-        self.__widget_dictionary = {
-            
-        }
+        self.__widget_dictionary = {}
+
+
+class CommandFactory:
+    """コマンドオブジェクトのファクトリークラス"""
+
+    __command_dictionary: Dict[Type, Callable]
+
+    def __init__(self) -> None:
+        self.__command_dictionary = {}

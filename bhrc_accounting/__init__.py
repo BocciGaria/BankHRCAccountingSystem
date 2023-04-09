@@ -1,6 +1,6 @@
 from bhrc_accounting.commands import CreateWindowCommand
+from bhrc_accounting.transferslip import TransferSlip
 from bhrc_accounting.widgets import WrappedTButton, WrappedTFrame, WrappedTk
-from bhrc_accounting.windows import TransferSlip
 
 
 class App(WrappedTk):

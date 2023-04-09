@@ -48,8 +48,6 @@ class Command(ICommand):
 class ValidateCommand(ICommand):
     """入力チェック抽象クラス"""
 
-    cmd_str: str
-
     def __init__(self, client: ITclComposite = None, receiver: Any = None) -> None:
         self.cmd_str = client.get_root().register(self.execute)
 
@@ -107,9 +105,6 @@ class UDigitValidateCommand(ValidateCommand):
 class CreateWindowCommand(Command):
     """ウィンドウ生成コマンドクラス"""
 
-    __root_window: WrappedTk
-    __window_type: Type[WrappedToplevel]
-
     def __init__(
         self, client: ITclComposite = None, receiver: Type[WrappedToplevel] = None
     ) -> None:
@@ -117,8 +112,8 @@ class CreateWindowCommand(Command):
             raise ValueError("client is None")
         if receiver is None:
             raise ValueError("receiver is None")
-        self.__root_window = client.get_root()
-        self.__window_type = receiver
+        self.__root_window: WrappedTk = client.get_root()
+        self.__window_type: Type[WrappedToplevel] = receiver
 
     def execute(self, *args, **kwargs) -> Any:
         self.__window_type(self.__root_window)

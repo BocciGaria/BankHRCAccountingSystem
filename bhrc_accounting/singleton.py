@@ -1,10 +1,18 @@
 from typing import *
 
 
-class Singleton:
-    """シングルトンパターンデコレーター"""
+# class Singleton:
+#     """シングルトンクラス"""
 
-    def __new__(cls, *args, **kwargs) -> Self:
-        if not hasattr(cls, "_instance"):
-            cls._instance = super(Singleton, cls).__new__(cls)
-        return cls._instance
+#     __instance = None
+
+#     def __new__(cls) -> Self:
+#         if cls.__instance is None:
+#             cls.__instance = super().__new__(cls)
+#         return cls.__instance
+
+#     @classmethod
+#     def get_instance(cls) -> Self:
+#         if cls.__instance is None:
+#             cls.__instance = cls()
+#         return cls.__instance
