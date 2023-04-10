@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 
 
-class ITclComponent(metaclass=abc.ABCMeta):
+class ITclComponent(tk.Widget, metaclass=abc.ABCMeta):
     """Tcl グラフィックComponentインターフェース
 
     すべてのグラフィックオブジェクトに共通のインターフェースを定義します。
@@ -15,7 +15,7 @@ class ITclComponent(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def get_master(self) -> tk.BaseWidget:
+    def get_master(self) -> tk.Widget:
         """インスタンスの直属の親要素を取得する"""
         raise NotImplementedError()
 
@@ -36,11 +36,14 @@ class ITclLeaf(ITclComponent, metaclass=abc.ABCMeta):
     """
 
 
-class TclComponent(ITclComponent):
-    """TclグラフィックComponent具象クラス"""
+# class TclComponent(ITclComponent):
+#     """TclグラフィックComponent具象クラス"""
 
-    def get_root(self) -> tk.Tk:
-        return self.get_master().get_root()
+#     def get_root(self) -> tk.Tk:
+#         return self.get_master().get_root()
+
+#     def get_master(self) -> tk.Widget:
+#         return self.master
 
 
 class TclComposite(ITclComposite):
@@ -49,12 +52,18 @@ class TclComposite(ITclComposite):
     def get_root(self) -> tk.Tk:
         return self.get_master().get_root()
 
+    def get_master(self) -> tk.Widget:
+        return self.master
+
 
 class TclLeaf(ITclLeaf):
     """Tcl グラフィックLeaf具象クラス"""
 
     def get_root(self) -> tk.Tk:
         return self.get_master().get_root()
+
+    def get_master(self) -> tk.Widget:
+        return self.master
 
 
 class WrappedTk(tk.Tk, TclComposite):
@@ -63,26 +72,26 @@ class WrappedTk(tk.Tk, TclComposite):
     def get_root(self) -> tk.Tk:
         return self
 
-    def get_master(self) -> tk.BaseWidget:
-        return self.master
-
 
 class WrappedToplevel(tk.Toplevel, TclComposite):
     """TclグラフィックCompositeでラップしたトップレベルクラス"""
-
-    def get_master(self) -> tk.BaseWidget:
-        return self.master
 
 
 class WrappedTFrame(ttk.Frame, TclComposite):
     """TclグラフィックCompositeでラップしたTフレームクラス"""
 
-    def get_master(self) -> tk.BaseWidget:
-        return self.master
-
 
 class WrappedTLabel(ttk.Label, TclComposite):
     """TclグラフィックCompositeでラップしたTラベルクラス"""
 
-    def get_master(self) -> tk.BaseWidget:
-        return self.master
+
+class WrappedTButton(ttk.Button, TclLeaf):
+    """TclグラフィックLeafでラップしたTボタンクラス"""
+
+
+class WrappedTEntry(ttk.Entry, TclLeaf):
+    """TclグラフィックLeafでラップしたTエントリークラス"""
+
+
+class WrappedTCombobox(ttk.Combobox, TclLeaf):
+    """TclグラフィックLeafでラップしたTコンボボックスクラス"""

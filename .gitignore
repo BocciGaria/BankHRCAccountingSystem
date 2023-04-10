@@ -166,3 +166,6 @@ cython_debug/
 
 # SQLite3
 sqlite3/*
+
+# Visual Studio Code
+.vscode
