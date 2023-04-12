@@ -4,8 +4,8 @@ from tkinter import ttk
 from tkinter.constants import *
 from typing import *
 
-from bhrc_accounting.commands import UDigitValidateCommand
-from bhrc_accounting.widgets import (
+from bhrc_accounting.command import UDigitValidateCommand
+from bhrc_accounting.widget.base_widget import (
     ITclComposite,
     WrappedTCombobox,
     WrappedTEntry,
