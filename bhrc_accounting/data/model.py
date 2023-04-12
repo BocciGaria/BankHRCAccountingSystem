@@ -1,7 +1,7 @@
 import abc
 from typing import *
 
-import fields
+from . import field
 
 
 class IModel(metaclass=abc.ABCMeta):
@@ -61,7 +61,7 @@ class ClubMember(BaseModel):
 
     def __init__(self) -> None:
         super().__init__()
-        self.no = fields.RealField()
+        self.no = field.RealField()
 
 
 def sample_function():

@@ -1,6 +1,6 @@
 import abc
 
-import db_type
+from . import dbtype
 
 
 class IField(metaclass=abc.ABCMeta):
@@ -11,7 +11,7 @@ class IField(metaclass=abc.ABCMeta):
 
     @property
     @abc.abstractproperty
-    def type(self) -> db_type.IDbType:
+    def type(self) -> dbtype.IDbType:
         """データ型"""
         raise NotImplementedError()
 
@@ -22,10 +22,10 @@ class BaseField(IField):
     フィールド具象クラスの要求に対する標準処理、その他のインターフェースを定義します。
     """
 
-    __type: db_type.IDbType
+    __type: dbtype.IDbType
 
     @property
-    def type(self) -> db_type.IDbType:
+    def type(self) -> dbtype.IDbType:
         return self.__type
 
 
@@ -37,7 +37,7 @@ class TextField(BaseField):
 
     def __init__(self) -> None:
         super().__init__()
-        self.__type = db_type.Text()
+        self.__type = dbtype.Text()
 
 
 class FloatField(BaseField):
@@ -45,7 +45,7 @@ class FloatField(BaseField):
 
     def __init__(self) -> None:
         super().__init__()
-        self.__type = db_type.Float()
+        self.__type = dbtype.Float()
 
 
 class RealField(FloatField):
@@ -53,7 +53,7 @@ class RealField(FloatField):
 
     def __init__(self) -> None:
         super().__init__()
-        self.__type = db_type.Real()
+        self.__type = dbtype.Real()
 
 
 if __name__ == "__main__":

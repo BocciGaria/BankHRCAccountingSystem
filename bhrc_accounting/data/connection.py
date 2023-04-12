@@ -3,8 +3,6 @@ from pathlib import Path
 import sqlite3
 from typing import *
 
-from db_command import ISqlCommand
-
 
 class IDatabaseConnection(metaclass=abc.ABCMeta):
     """データベース接続インターフェース
@@ -24,14 +22,14 @@ class IDatabaseConnection(metaclass=abc.ABCMeta):
         """
         raise NotImplementedError()
 
-    @abc.abstractproperty
-    def command(self) -> ISqlCommand:
-        """SQLコマンドクラスのインスタンスを取得する
+    # @abc.abstractproperty
+    # def command(self) -> ISqlCommand:
+    #     """SQLコマンドクラスのインスタンスを取得する
 
-        Returns:
-            ISqlCommand: _description_
-        """
-        raise NotImplementedError()
+    #     Returns:
+    #         ISqlCommand: _description_
+    #     """
+    #     raise NotImplementedError()
 
     @abc.abstractmethod
     def connect(self) -> None:
@@ -83,9 +81,9 @@ class Sqlite3Connection(IDatabaseConnection):
     def __init__(self, path: Path):
         self.__path = path
 
-    @property
-    def command(self) -> ISqlCommand:
-        return
+    # @property
+    # def command(self) -> ISqlCommand:
+    #     return
 
     def connect(self) -> None:
         self.__connection = sqlite3.connect(self.__path)

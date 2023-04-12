@@ -4,14 +4,14 @@ from tkinter.constants import *
 from typing import Any, Type
 
 from bhrc_accounting.const import *
-from bhrc_accounting.mytyping import (
+from bhrc_accounting.typing import (
     CommandSignature,
     Index,
     InputAction,
     ValidateCmdOption,
     WidgetName,
 )
-from bhrc_accounting.widgets import ITclComposite, WrappedTk, WrappedToplevel
+from bhrc_accounting.widget.base_widget import ITclComposite, WrappedTk, WrappedToplevel
 
 
 class ICommand(metaclass=abc.ABCMeta):
