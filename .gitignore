@@ -165,7 +165,7 @@ cython_debug/
 #.idea/
 
 # SQLite3
-sqlite3/*
+sqlite3/*.db
 
 # Visual Studio Code
 .vscode
