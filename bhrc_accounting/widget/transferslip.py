@@ -14,14 +14,17 @@ from bhrc_accounting.widget import (
 
 
 class TransferSlip(base_widget.WrappedToplevel):
-    """振替伝票ウィンドウ
+    """振替伝票ウィンドウクラス
 
     Attributes:
+        DETAIL_HEADER_ROW_COUNT (int): 振替伝票明細のヘッダー行数
         var_member (tk.StringVar): 会員名の変数
         var_sum_debit (tk.StringVar): 借方合計の変数
         var_sum_credit (tk.StringVar): 貸方合計の変数
         details (List[TransferSlipDetail]): 振替伝票明細のリスト
     """
+
+    DETAIL_HEADER_ROW_COUNT = 1
 
     def __init__(self, parent: base_widget.ITclComposite, **kwargs):
         super().__init__(parent, **kwargs)
@@ -105,7 +108,7 @@ class TransferSlip(base_widget.WrappedToplevel):
         self.details: List[TransferSlipDetailRow] = list()
         for i in range(0, 7):
             self.details.append(TransferSlipDetailRow(frame_detail))
-            self.details[i].grid_items(i + 1)
+            self.details[i].grid_items(i + self.DETAIL_HEADER_ROW_COUNT)
         # 明細部フッター
         base_widget.WrappedTEntry(
             frame_detail,
@@ -113,17 +116,17 @@ class TransferSlip(base_widget.WrappedToplevel):
             width=-1,
             font=("System", 18),
             state="readonly",
-        ).grid(column=0, row=8, sticky=NSEW)
+        ).grid(column=0, row=1000, sticky=NSEW)
         base_widget.WrappedTLabel(
             frame_detail, text="合計", font=("System", 24, "bold"), anchor=CENTER
-        ).grid(column=1, row=8, columnspan=3, sticky=NSEW)
+        ).grid(column=1, row=1000, columnspan=3, sticky=NSEW)
         base_widget.WrappedTEntry(
             frame_detail,
             textvariable=self.var_sum_credit,
             width=-1,
             font=("System", 18),
             state="readonly",
-        ).grid(column=4, row=8, sticky=NSEW)
+        ).grid(column=4, row=1000, sticky=NSEW)
 
     def _register(self, *args):
         """登録処理"""
@@ -131,16 +134,19 @@ class TransferSlip(base_widget.WrappedToplevel):
 
     def _insert_row(self, *args):
         """行挿入処理"""
-        pass
+        master = self.details[0].parent
+        new_detail = TransferSlipDetailRow(master)
+        self.details.append(new_detail)
+        row_index = self.details.index(new_detail) + self.DETAIL_HEADER_ROW_COUNT
+        self.details[-1].grid_items(row_index)
 
 
 class TransferSlipDetailRow:
     """振替伝票明細行クラス
 
-    Constants:
-        WIDTHS (Tuple[int, int, int, int, int]): 各列の幅
-
     Attributes:
+        WIDTHS (Tuple[int, int, int, int, int]): 各列の幅
+        parent (base_widget.ITclComposite): 明細行の各ウィジェットを直接配置する親ウィジェット
         cmd_valid_ammount (UDigitValidateCommand): 金額入力時の検証コマンド
         var_debit_amount (tk.StringVar): 借方金額変数
         var_debit_item (tk.StringVar): 借方科目変数
@@ -151,7 +157,12 @@ class TransferSlipDetailRow:
 
     WIDTHS = (12, 10, 40, 10, 12)
 
-    def __init__(self, parent):
+    def __init__(self, parent: base_widget.ITclComposite):
+        """コンストラクタ
+
+        Args:
+            parent (tk.Widget): 明細行の各ウィジェットを直接配置する親ウィジェット
+        """
         self.parent = parent
         self.cmd_valid_ammount = UDigitValidateCommand(parent)
         self.var_debit_amount = tk.StringVar()
@@ -161,6 +172,11 @@ class TransferSlipDetailRow:
         self.var_credit_amount = tk.StringVar()
 
     def grid_items(self, row):
+        """明細行の各ウィジェットを配置する
+
+        Args:
+            row (int): 親ウィジェット内の各ウィジェットを配置する行番号
+        """
         ttk.Style().configure(
             "TCombobox", font="System 24", borderwidth=1, relief="solid"
         )
