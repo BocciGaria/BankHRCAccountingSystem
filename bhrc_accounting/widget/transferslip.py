@@ -49,13 +49,13 @@ class TransferSlip(base_widget.WrappedToplevel):
         cmd_bar = commandbar.CommandBar(frame_outer)
         cmd_bar.add_command(
             commandbar.ImageButtonCommandItem(
-                Path.joinpath(config.IMAGE_DIR, "hard-drive-solid.png"),
+                config.get_image_path("hard-drive-solid.png"),
                 self._register,
             )
         )
         cmd_bar.add_command(
             commandbar.ImageButtonCommandItem(
-                Path.joinpath(config.IMAGE_DIR, "insert.png"),
+                config.get_image_path("insert.png"),
                 self._insert_row,
             )
         )
