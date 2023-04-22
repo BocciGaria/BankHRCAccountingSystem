@@ -1,7 +1,7 @@
 import tkinter as tk
 
-from bhrc_accounting.data.model import ClubMember
-from bhrc_accounting.widget import base_widget, menu
+from bhrc_accounting.view.widget import base_widget
+from bhrc_accounting.view import menu
 from bhrc_accounting import config
 
 
@@ -11,7 +11,7 @@ class App(base_widget.WrappedTk):
         self.iconphoto(
             False, tk.PhotoImage(file=config.get_image_path("horse-head-lines.png"))
         )
-        menu.Menu(self).grid()
+        menu.MenuView(self).grid()
 
 
 def main():

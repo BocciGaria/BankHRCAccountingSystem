@@ -1,29 +1,30 @@
-from bhrc_accounting import command
-from . import base_widget, journal, ledger, transferslip
+from bhrc_accounting.controller.command import command
+from . import journal, ledger, transferslip
+from .widget import base_widget as bw
 
 
-class Menu(base_widget.WrappedTFrame):
+class MenuView(bw.WrappedTFrame):
     """メインメニューフレームクラス"""
 
-    def __init__(self, parent: base_widget.WrappedTk, **kwargs) -> None:
+    def __init__(self, parent: bw.WrappedTk, **kwargs) -> None:
         super().__init__(parent, **kwargs)
         # 振替伝票ウィンドウ表示ボタン
-        base_widget.WrappedTButton(
+        bw.WrappedTButton(
             self,
             text="振替伝票",
             command=command.CreateWindowCommand(
-                self, transferslip.TransferSlip
+                self, transferslip.TransferSlipView
             ).get_signature(),
         ).grid(column=0, row=0, padx=100, pady=50)
         # 仕訳帳ウィンドウ表示ボタン
-        base_widget.WrappedTButton(
+        bw.WrappedTButton(
             self,
             text="仕訳帳",
-            command=command.CreateWindowCommand(self, journal.Journal),
+            command=command.CreateWindowCommand(self, journal.JournalView),
         ).grid(column=0, row=1, padx=100, pady=50)
         # 元帳ウィンドウ表示ボタン
-        base_widget.WrappedTButton(
+        bw.WrappedTButton(
             self,
             text="元帳",
-            command=command.CreateWindowCommand(self, ledger.Ledger),
+            command=command.CreateWindowCommand(self, ledger.LedgerView),
         ).grid(column=0, row=2, padx=100, pady=50)
