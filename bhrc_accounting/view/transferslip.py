@@ -6,14 +6,14 @@ from tkinter.constants import *
 from typing import *
 
 from bhrc_accounting import config
-from bhrc_accounting.command import UDigitValidateCommand
-from bhrc_accounting.widget import (
+from bhrc_accounting.controller.command import command
+from bhrc_accounting.view.widget import (
     base_widget,
     commandbar,
 )
 
 
-class TransferSlip(base_widget.WrappedToplevel):
+class TransferSlipView(base_widget.WrappedToplevel):
     """振替伝票ウィンドウクラス
 
     Attributes:
@@ -164,7 +164,7 @@ class TransferSlipDetailRow:
             parent (tk.Widget): 明細行の各ウィジェットを直接配置する親ウィジェット
         """
         self.parent = parent
-        self.cmd_valid_ammount = UDigitValidateCommand(parent)
+        self.cmd_valid_ammount = command.UDigitValidateCommand(parent)
         self.var_debit_amount = tk.StringVar()
         self.var_debit_item = tk.StringVar()
         self.var_summary = tk.StringVar()

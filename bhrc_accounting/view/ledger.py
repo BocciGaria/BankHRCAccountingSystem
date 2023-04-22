@@ -1,8 +1,8 @@
-from bhrc_accounting.widget.base_widget import WrappedToplevel, WrappedTLabel
+from bhrc_accounting.view.widget import base_widget
 from bhrc_accounting.const import FONT_FIXED_24
 
 
-class Ledger(WrappedToplevel):
+class LedgerView(base_widget.WrappedToplevel):
     """元帳ウィンドウ"""
 
     def __init__(self, parent, **kwargs):
@@ -11,7 +11,7 @@ class Ledger(WrappedToplevel):
         self.title("元帳")
 
         # >>>>>DEBUG>>>>>
-        WrappedTLabel(
+        base_widget.WrappedTLabel(
             self, text="Ledger(元帳ウィンドウ)", padding=40, font=FONT_FIXED_24
         ).grid()
         # <<<<<DEBUG<<<<<
