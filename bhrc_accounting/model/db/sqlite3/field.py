@@ -30,7 +30,7 @@ class IField(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def set_value(self, value: dbtype.IDbType) -> None:
+    def set_value(self, value: Any) -> None:
         """値設定
 
         Args:
@@ -56,10 +56,8 @@ class BaseField(IField):
             raise ValueError("値が設定されていません。")
         return self.__value
 
-    def set_value(self, value: dbtype.IDbType) -> None:
-        if value is None or not isinstance(value, self.__type):
-            raise TypeError("引数 value の型が不正です。")
-        self.__value = value
+    def set_value(self, value: Any) -> None:
+        self.__value = self.__type(value)
 
 
 class TextField(BaseField):
