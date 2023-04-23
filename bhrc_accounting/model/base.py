@@ -36,3 +36,7 @@ class IModel(metaclass=abc.ABCMeta):
             None
         """
         raise NotImplementedError()
+
+
+class BaseModel(IModel):
+    """Base class for models"""
