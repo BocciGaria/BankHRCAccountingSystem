@@ -20,6 +20,10 @@ class IDbType(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
 
+class BaseDbType(IDbType):
+    """データベースデータ型基底クラス"""
+
+
 class Text(IDbType):
     """文字列型"""
 
@@ -31,20 +35,36 @@ class Text(IDbType):
         return True
 
 
-class Float(IDbType):
+class Real(IDbType):
     """8バイト浮動小数型"""
-
-    @property
-    def name(self) -> str:
-        return "float"
-
-
-class Real(Float):
-    """SQLiteの8バイト浮動小数型"""
 
     def name(self) -> str:
         return "real"
 
 
-if __name__ == "__main__":
-    pass
+class Integer(IDbType):
+    """整数型"""
+
+    def name(self) -> str:
+        return "integer"
+
+
+class Blob(IDbType):
+    """バイナリ型"""
+
+    def name(self) -> str:
+        return "blob"
+
+
+class Boolean(IDbType):
+    """真偽型"""
+
+    def name(self) -> str:
+        return "boolean"
+
+
+class Date(IDbType):
+    """日付型"""
+
+    def name(self) -> str:
+        return "date"

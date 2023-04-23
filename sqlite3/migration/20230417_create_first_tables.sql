@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS account (
     credit_title INTEGER NOT NULL REFERENCES m_title(id) ON DELETE CASCADE,
     amount INTEGER NOT NULL,
     description TEXT NOT NULL,
-    slip_id INTEGER REFERENCES slip(id) ON DELETE CASCADE
+    slip INTEGER REFERENCES slip(id) ON DELETE CASCADE
 );
 
 -- 振替伝票テーブル
