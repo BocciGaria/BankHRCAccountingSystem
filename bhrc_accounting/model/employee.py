@@ -13,9 +13,9 @@ class Employee(base.BaseModel):
 
     def __init__(self) -> None:
         super().__init__()
-        self.id = field.TextField()
-        self.name = field.TextField()
-        self.is_active = field.BooleanField()
+        self.id = self.field_factory.get_text_field()
+        self.name = self.field_factory.get_text_field()
+        self.is_active = self.field_factory.get_boolean_field()
         self.fields = dict(
             id=self.id,
             name=self.name,
