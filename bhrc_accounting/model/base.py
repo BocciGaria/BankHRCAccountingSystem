@@ -1,5 +1,7 @@
 import abc
 
+from .db.factory import FieldFactory
+
 
 class IModel(metaclass=abc.ABCMeta):
     """Interface for models
@@ -40,3 +42,6 @@ class IModel(metaclass=abc.ABCMeta):
 
 class BaseModel(IModel):
     """Base class for models"""
+
+    def __init__(self):
+        self.field_factory = FieldFactory.get_instance()

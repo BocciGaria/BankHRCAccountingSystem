@@ -17,13 +17,13 @@ class Account(base.BaseModel):
 
     def __init__(self) -> None:
         super().__init__()
-        self.id = field.IntegerField()
-        self.date = field.DateField()
-        self.debit_title = field.IntegerField()
-        self.credit_title = field.IntegerField()
-        self.ammount = field.IntegerField()
-        self.description = field.TextField()
-        self.slip = field.IntegerField()
+        self.id = self.field_factory.get_8bits_integer_field()
+        self.date = self.field_factory.get_date_field()
+        self.debit_title = self.field_factory.get_8bits_integer_field()
+        self.credit_title = self.field_factory.get_8bits_integer_field()
+        self.ammount = self.field_factory.get_8bits_integer_field()
+        self.description = self.field_factory.get_text_field()
+        self.slip = self.field_factory.get_8bits_integer_field()
         self.fields = dict(
             id=self.id,
             date=self.date,

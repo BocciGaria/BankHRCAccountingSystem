@@ -1,56 +1,11 @@
-import abc
 import datetime
 from typing import *
 
-
-class IDbType(metaclass=abc.ABCMeta):
-    """データベースデータ型インターフェース
-
-    データベースのデータ型が提供するインターフェースを定義します。
-    """
-
-    @abc.abstractproperty
-    def name(self) -> str:
-        """データ型名"""
-        raise NotImplementedError()
-
-    @abc.abstractclassmethod
-    def validate(self, value: Any) -> bool:
-        """データ型による値チェック(True:正常、False:不正)"""
-        raise NotImplementedError()
-
-    @abc.abstractproperty
-    def value(self) -> Any:
-        """データ"""
-        raise NotImplementedError()
+from ..dbtype import BaseDbType
 
 
-class BaseDbType(IDbType):
-    """データベースデータ型基底クラス"""
-
-    __type: Type
-
-    def __init__(self, value: Any) -> None:
-        if self.validate(value):
-            raise ValueError("引数 value の値または型が不正です。")
-        self.__value = self.__type(value)
-
-    @property
-    def value(self) -> Any:
-        return self.__value
-
-    def validate(self, value: Any) -> bool:
-        try:
-            self.__type(value)
-        except ValueError:
-            return False
-        except TypeError:
-            return False
-        return True
-
-
-class Text(IDbType):
-    """文字列型"""
+class Text(BaseDbType):
+    """Sqlite3の文字列型"""
 
     __type = str
 
@@ -59,8 +14,8 @@ class Text(IDbType):
         return "text"
 
 
-class Real(IDbType):
-    """8バイト浮動小数型"""
+class Real(BaseDbType):
+    """Sqlite3の8バイト浮動小数型"""
 
     __type = float
 
@@ -68,8 +23,8 @@ class Real(IDbType):
         return "real"
 
 
-class Integer(IDbType):
-    """整数型"""
+class Integer(BaseDbType):
+    """Sqlite3の整数型"""
 
     __type = int
 
@@ -77,8 +32,8 @@ class Integer(IDbType):
         return "integer"
 
 
-class Blob(IDbType):
-    """バイナリ型"""
+class Blob(BaseDbType):
+    """Sqlite3のバイナリ型"""
 
     __type = bytes
 
@@ -86,8 +41,8 @@ class Blob(IDbType):
         return "blob"
 
 
-class Boolean(IDbType):
-    """真偽型"""
+class Boolean(BaseDbType):
+    """Sqlite3の真偽型"""
 
     __type = bool
 
@@ -102,8 +57,8 @@ class Boolean(IDbType):
         return "boolean"
 
 
-class Date(IDbType):
-    """日付型"""
+class Date(BaseDbType):
+    """Sqlite3の日付型"""
 
     __type = datetime.date
 

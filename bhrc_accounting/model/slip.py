@@ -14,10 +14,10 @@ class slip(base.BaseModel):
 
     def __init__(self) -> None:
         super().__init__()
-        self.id = field.IntegerField()
-        self.first_date = field.DateField()
-        self.last_date = field.DateField()
-        self.employee = field.TextField()
+        self.id = self.field_factory.get_8bits_integer_field()
+        self.first_date = self.field_factory.get_date_field()
+        self.last_date = self.field_factory.get_date_field()
+        self.employee = self.field_factory.get_text_field()
         self.fields = dict(
             id=self.id,
             first_date=self.first_date,
