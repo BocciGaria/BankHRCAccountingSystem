@@ -1,7 +1,7 @@
 import abc
 
 
-class IView(abc.ABCMeta):
+class IView(metaclass=abc.ABCMeta):
     """Interface for views
 
     Describe the interface for views in Tkinter/MVC
@@ -50,4 +50,4 @@ class BaseView(IView):
 
     def __init__(self, master):
         self.master = master
-        self.create_widgets()
+        # self.create_widgets()

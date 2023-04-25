@@ -1,6 +1,6 @@
 import abc
 
-from bhrc_accounting.widget import base_widget as bw
+from bhrc_accounting.view.widget import base_widget as bw
 
 
 class IController(metaclass=abc.ABCMeta):
@@ -35,3 +35,13 @@ class IController(metaclass=abc.ABCMeta):
             None
         """
         raise NotImplementedError()
+
+
+class BaseController(IController):
+    """Base class for controllers
+
+    Base class for controllers in Tkinter/MVC
+    """
+
+    def __init__(self, master: bw.ITclComposite):
+        self.master = master

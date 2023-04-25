@@ -144,7 +144,7 @@ class TransferSlipView(BaseView):
 
     DETAIL_HEADER_ROW_COUNT = 1
 
-    def __init__(self, master, register_callback: Callable):
+    def __init__(self, master):
         super().__init__(master)
         # Variables
         self.var_member = tk.StringVar()
@@ -155,13 +155,18 @@ class TransferSlipView(BaseView):
         # Details
         self.details: List[TransferSlipDetailRow]
         # Callback
-        self.register = register_callback
+        self.register: Callable = None
 
     def create_widgets(self):
+        # ブロック節
+        if self.register is None:
+            raise ValueError("register is not set")
+
+        # *****ウィンドウ*****
         self.window = bw.WrappedToplevel(self.master)
 
         # *****外枠*****
-        frame_outer = bw.WrappedTFrame(self)
+        frame_outer = bw.WrappedTFrame(self.master)
         frame_outer.grid(column=0, row=0)
         frame_outer.columnconfigure(0, weight=1)
         frame_outer.rowconfigure(0, weight=1)
@@ -267,6 +272,14 @@ class TransferSlipView(BaseView):
         self.details.append(new_detail)
         row_index = self.details.index(new_detail) + self.DETAIL_HEADER_ROW_COUNT
         self.details[-1].grid_items(row_index)
+
+    def set_register_command(self, callback: Callable):
+        """登録ボタンのコマンドを設定する
+
+        Args:
+            callback (Callable): 登録ボタンのコマンド
+        """
+        self.register = callback
 
 
 class TransferSlipDetailRow:
