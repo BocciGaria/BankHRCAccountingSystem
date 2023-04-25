@@ -11,7 +11,7 @@ class App(base_widget.WrappedTk):
         self.iconphoto(
             False, tk.PhotoImage(file=config.get_image_path("horse-head-lines.png"))
         )
-        menu.MenuView(self).grid()
+        # menu.MenuView(self).grid()
 
 
 def main():
