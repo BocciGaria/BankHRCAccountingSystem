@@ -1,4 +1,6 @@
-from bhrc_accounting.controller.command import command
+from typing import *
+
+# from bhrc_accounting.controller.command import command
 from . import journal, ledger, transferslip
 from .base import BaseView
 from .widget import base_widget as bw
@@ -46,23 +48,23 @@ class MenuView(BaseView):
         self.btn_transferslip = bw.WrappedTButton(
             self.frame_outer,
             text="振替伝票",
-            command=command.CreateWindowCommand(
-                self.master, transferslip.TransferSlipView
-            ).get_signature(),
+            # command=command.CreateWindowCommand(
+            #     self.master, transferslip.TransferSlipView
+            # ).get_signature(),
         )
         self.btn_journal = bw.WrappedTButton(
             self.frame_outer,
             text="仕訳帳",
-            command=command.CreateWindowCommand(
-                self.master, journal.JournalView
-            ).get_signature(),
+            # command=command.CreateWindowCommand(
+            #     self.master, journal.JournalView
+            # ).get_signature(),
         )
         self.btn_ledger = bw.WrappedTButton(
             self.frame_outer,
             text="元帳",
-            command=command.CreateWindowCommand(
-                self.master, ledger.LedgerView
-            ).get_signature(),
+            # command=command.CreateWindowCommand(
+            #     self.master, ledger.LedgerView
+            # ).get_signature(),
         )
 
     def destroy_widgets(self):
@@ -79,3 +81,12 @@ class MenuView(BaseView):
 
     def remove_widgets(self):
         self.frame_outer.grid_remove()
+
+    def set_btn_transferslip_command(self, callback: Callable):
+        self.btn_transferslip.configure(command=callback)
+
+    def set_btn_journal_command(self, callback: Callable):
+        self.btn_journal.configure(command=callback)
+
+    def set_btn_ledger_command(self, callback: Callable):
+        self.btn_ledger.configure(command=callback)

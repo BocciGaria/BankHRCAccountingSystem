@@ -1,7 +1,9 @@
 import tkinter as tk
 
+from bhrc_accounting.controller.menu import MenuController
 from bhrc_accounting.view.widget import base_widget
-from bhrc_accounting.view import menu
+
+# from bhrc_accounting.view import menu
 from bhrc_accounting import config
 
 
@@ -12,6 +14,8 @@ class App(base_widget.WrappedTk):
             False, tk.PhotoImage(file=config.get_image_path("horse-head-lines.png"))
         )
         # menu.MenuView(self).grid()
+        self.menu = MenuController(self)
+        self.menu.run()
 
 
 def main():

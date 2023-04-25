@@ -11,7 +11,8 @@ from bhrc_accounting.typing import (
     ValidateCmdOption,
     WidgetName,
 )
-from bhrc_accounting.view.widget import base_widget
+from bhrc_accounting.controller.base import IController
+from bhrc_accounting.view.widget import base_widget as bw
 
 
 class ICommand(metaclass=abc.ABCMeta):
@@ -21,9 +22,7 @@ class ICommand(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def __init__(
-        self, client: base_widget.ITclComposite = None, receiver: Any = None
-    ) -> None:
+    def __init__(self, client: bw.ITclComposite = None, receiver: Any = None) -> None:
         raise NotImplementedError()
 
     @abc.abstractmethod
@@ -50,9 +49,7 @@ class Command(ICommand):
 class ValidateCommand(ICommand):
     """入力チェック抽象クラス"""
 
-    def __init__(
-        self, client: base_widget.ITclComposite = None, receiver: Any = None
-    ) -> None:
+    def __init__(self, client: bw.ITclComposite = None, receiver: Any = None) -> None:
         self.cmd_str = client.get_root().register(self.execute)
 
     def get_signature(self) -> CommandSignature:
@@ -111,15 +108,15 @@ class CreateWindowCommand(Command):
 
     def __init__(
         self,
-        client: base_widget.ITclComposite = None,
-        receiver: Type[base_widget.WrappedToplevel] = None,
+        client: bw.ITclComposite = None,
+        receiver: Type[IController] = None,
     ) -> None:
         if client is None:
             raise ValueError("client is None")
         if receiver is None:
             raise ValueError("receiver is None")
-        self.__root_window: base_widget.WrappedTk = client.get_root()
-        self.__window_type: Type[base_widget.WrappedToplevel] = receiver
+        self.__root_window: bw.WrappedTk = client.get_root()
+        self.__controller_type: Type[IController] = receiver
 
     def execute(self, *args, **kwargs) -> Any:
-        self.__window_type(self.__root_window)
+        self.__controller_type(self.__root_window).run()
