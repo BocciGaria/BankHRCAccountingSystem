@@ -9,7 +9,7 @@ class TransferSlipController(BaseController):
     def __init__(self, master: bw.ITclComposite):
         super().__init__(master)
         self.view = TransferSlipView(master)
-        self.view.set_register_command(lambda: print("Register button is clicked."))
+        self.view.set_register_command(self.register_transfer_slip)
         self.view.create_widgets()
 
     def run(self):
@@ -17,3 +17,15 @@ class TransferSlipController(BaseController):
 
     def stop(self):
         self.view.destroy_widgets()
+
+    def register_transfer_slip(self):
+        count = 0
+        for detail in self.view.details:
+            count += 1
+            print(f"========== Detail {count} ==========")
+            print(f"Debit item      : {detail.var_debit_item}")
+            print(f"Debit ammount : {detail.var_credit_amount}")
+            print(f"Credit item     : {detail.var_debit_item}")
+            print(f"Credit ammount: {detail.var_credit_amount}")
+            print(f"Summary       : {detail.var_summary}")
+            print()
