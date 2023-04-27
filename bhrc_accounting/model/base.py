@@ -1,6 +1,7 @@
 import abc
 
-from .db.factory import FieldFactory
+from .db.factory import OperatorFactory
+from bhrc_accounting.config import DB_CONNECTION_STRING
 
 
 class IModel(metaclass=abc.ABCMeta):
@@ -10,38 +11,14 @@ class IModel(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
-    def get_all(self):
-        """Get all records
-
-        Returns:
-            The records
-        """
-        raise NotImplementedError()
-
-    @abc.abstractmethod
-    def get_for_primary_key(self, **primary_keys):
-        """Get a record for primary key
-
-        Args:
-            primary_keys: The primary keys for the record
-
-        Returns:
-            The record
-        """
-        raise NotImplementedError()
-
-    @abc.abstractmethod
-    def save(self):
-        """Save the record
-
-        Returns:
-            None
-        """
+    def __init__(self) -> None:
         raise NotImplementedError()
 
 
 class BaseModel(IModel):
     """Base class for models"""
 
-    def __init__(self):
-        self.field_factory = FieldFactory.get_instance()
+    table_name: str = None
+
+    def __init__(self, **kwargs) -> None:
+        self.operator = OperatorFactory.get_operator(DB_CONNECTION_STRING)

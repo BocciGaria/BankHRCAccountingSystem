@@ -1,5 +1,4 @@
 from . import base
-from .db.sqlite3 import field
 
 
 class Account(base.BaseModel):
