@@ -21,4 +21,4 @@ class BaseModel(IModel):
     table_name: str = None
 
     def __init__(self, **kwargs) -> None:
-        self.operator = OperatorFactory.get_operator(DB_CONNECTION_STRING)
+        self.operator = OperatorFactory.get_instance().get_operator(DB_CONNECTION_STRING)

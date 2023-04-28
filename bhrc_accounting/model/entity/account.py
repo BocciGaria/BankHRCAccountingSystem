@@ -1,7 +1,8 @@
 from . import base
+from ..db.factory import FieldFactory
 
 
-class Account(base.BaseModel):
+class Account(base.BaseTableEntity):
     """Model class for accounting table
 
     Attributes:
@@ -16,13 +17,14 @@ class Account(base.BaseModel):
 
     def __init__(self) -> None:
         super().__init__()
-        self.id = self.field_factory.get_8bits_integer_field()
-        self.date = self.field_factory.get_date_field()
-        self.debit_title = self.field_factory.get_8bits_integer_field()
-        self.credit_title = self.field_factory.get_8bits_integer_field()
-        self.ammount = self.field_factory.get_8bits_integer_field()
-        self.description = self.field_factory.get_text_field()
-        self.slip = self.field_factory.get_8bits_integer_field()
+        field_factory = FieldFactory.get_instance()
+        self.id = field_factory.get_8bits_integer_field()
+        self.date = field_factory.get_date_field()
+        self.debit_title = field_factory.get_8bits_integer_field()
+        self.credit_title = field_factory.get_8bits_integer_field()
+        self.ammount = field_factory.get_8bits_integer_field()
+        self.description = field_factory.get_text_field()
+        self.slip = field_factory.get_8bits_integer_field()
         self.fields = dict(
             id=self.id,
             date=self.date,
