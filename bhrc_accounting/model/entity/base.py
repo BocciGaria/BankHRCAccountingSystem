@@ -1,4 +1,7 @@
 import abc
+from typing import *
+
+from ..db.field import IField
 
 
 class ITableEntity(metaclass=abc.ABCMeta):
@@ -8,6 +11,7 @@ class ITableEntity(metaclass=abc.ABCMeta):
     """
 
     table_name: str = None
+    fields: Iterable[IField] = None
 
 
 class BaseTableEntity(ITableEntity):

@@ -2,7 +2,7 @@ from . import base
 from ..db.factory import FieldFactory
 
 
-class slip(base.BaseTableEntity):
+class Slip(base.BaseTableEntity):
     """Model class for slip table
 
     Attributes:

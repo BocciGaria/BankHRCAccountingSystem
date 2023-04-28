@@ -11,160 +11,43 @@ from .widget import base_widget as bw
 from .widget.commandbar import CommandBar, ImageButtonCommandItem
 
 
-# class TransferSlipView(base_widget.WrappedToplevel):
-#     """振替伝票ウィンドウクラス
-
-#     Attributes:
-#         DETAIL_HEADER_ROW_COUNT (int): 振替伝票明細のヘッダー行数
-#         var_member (tk.StringVar): 会員名の変数
-#         var_sum_debit (tk.StringVar): 借方合計の変数
-#         var_sum_credit (tk.StringVar): 貸方合計の変数
-#         details (List[TransferSlipDetail]): 振替伝票明細のリスト
-#     """
-
-#     DETAIL_HEADER_ROW_COUNT = 1
-
-#     def __init__(self, parent: base_widget.ITclComposite, **kwargs):
-#         super().__init__(parent, **kwargs)
-#         # ========== メンバー変数の初期化 ==========
-#         self.var_member = tk.StringVar()
-#         self.var_sum_debit = tk.StringVar()
-#         self.var_sum_credit = tk.StringVar()
-
-#         ttk.Style().configure("TEntry", font="System 24", borderwidth=1, relief="solid")
-#         ttk.Style().configure("TLabel", font="System 24", borderwidth=1, relief="solid")
-#         ttk.Style().configure(
-#             "TCombobox", font="System 24", borderwidth=1, relief="solid"
-#         )
-
-#         # ========== コンテンツの生成 ==========
-#         # *****外枠*****
-#         frame_outer = base_widget.WrappedTFrame(self)
-#         frame_outer.grid(column=0, row=0)
-#         frame_outer.columnconfigure(0, weight=1)
-#         frame_outer.rowconfigure(0, weight=1)
-#         # *****コマンドバー*****
-#         cmd_bar = commandbar.CommandBar(frame_outer)
-#         cmd_bar.add_command(
-#             commandbar.ImageButtonCommandItem(
-#                 config.get_image_path("hard-drive-solid.png"),
-#                 self._register,
-#             )
-#         )
-#         cmd_bar.add_command(
-#             commandbar.ImageButtonCommandItem(
-#                 config.get_image_path("insert.png"),
-#                 self._insert_row,
-#             )
-#         )
-#         cmd_bar.grid(column=0, row=0, sticky=NSEW)
-#         cmd_bar.rowconfigure(0, weight=1)
-#         # *****ヘッダー部*****
-#         frame_header = base_widget.WrappedTFrame(frame_outer)
-#         frame_header.grid(column=0, row=1, sticky=NSEW)
-#         frame_header.columnconfigure(0, weight=630)
-#         frame_header.columnconfigure(1, weight=500)
-#         frame_header.columnconfigure(2, weight=150)
-#         base_widget.WrappedTLabel(
-#             frame_header,
-#             text="振替伝票",
-#             font=("System", 32, "underline"),
-#             anchor=CENTER,
-#         ).grid(column=0, row=0, rowspan=2, sticky=NSEW)
-#         base_widget.WrappedTLabel(
-#             frame_header,
-#             text=date.today().strftime("%Y/%m/%d"),
-#             font=("System", 24),
-#             anchor=CENTER,
-#         ).grid(column=1, row=0, rowspan=2, sticky=NSEW)
-#         base_widget.WrappedTLabel(
-#             frame_header,
-#             text="記入者",
-#             font=("System", 16),
-#             anchor=CENTER,
-#         ).grid(column=2, row=0, sticky=NSEW)
-#         base_widget.WrappedTEntry(
-#             frame_header,
-#             textvariable=self.var_member,
-#             width=10,
-#             font=("System", 20),
-#         ).grid(column=2, row=1, sticky=NSEW)
-#         # *****明細部*****
-#         frame_detail = base_widget.WrappedTFrame(frame_outer)
-#         frame_detail.grid(column=0, row=2, sticky=NSEW)
-#         frame_detail.columnconfigure(0, weight=1)
-#         # 明細部ヘッダー
-#         detail_labels = ("金額", "借方科目", "摘要", "貸方科目", "金額")
-#         for i in range(0, len(detail_labels)):
-#             frame_detail.columnconfigure(i, weight=TransferSlipDetailRow.WIDTHS[i])
-#             base_widget.WrappedTLabel(
-#                 frame_detail,
-#                 text=detail_labels[i],
-#                 anchor=CENTER,
-#             ).grid(column=i, row=0, sticky=NSEW)
-#         # 明細部ボディ
-#         self.details: List[TransferSlipDetailRow] = list()
-#         for i in range(0, 7):
-#             self.details.append(TransferSlipDetailRow(frame_detail))
-#             self.details[i].grid_items(i + self.DETAIL_HEADER_ROW_COUNT)
-#         # 明細部フッター
-#         base_widget.WrappedTEntry(
-#             frame_detail,
-#             textvariable=self.var_sum_debit,
-#             width=-1,
-#             font=("System", 18),
-#             state="readonly",
-#         ).grid(column=0, row=1000, sticky=NSEW)
-#         base_widget.WrappedTLabel(
-#             frame_detail, text="合計", font=("System", 24, "bold"), anchor=CENTER
-#         ).grid(column=1, row=1000, columnspan=3, sticky=NSEW)
-#         base_widget.WrappedTEntry(
-#             frame_detail,
-#             textvariable=self.var_sum_credit,
-#             width=-1,
-#             font=("System", 18),
-#             state="readonly",
-#         ).grid(column=4, row=1000, sticky=NSEW)
-
-#     def _register(self, *args):
-#         """登録処理"""
-#         pass
-
-#     def _insert_row(self, *args):
-#         """行挿入処理"""
-#         master = self.details[0].parent
-#         new_detail = TransferSlipDetailRow(master)
-#         self.details.append(new_detail)
-#         row_index = self.details.index(new_detail) + self.DETAIL_HEADER_ROW_COUNT
-#         self.details[-1].grid_items(row_index)
-
-
 class TransferSlipView(BaseView):
-    """View class for the transfer slip window"""
+    """View class for the transfer slip window
+
+    Attributes:
+        window (WrappedToplevel): The window
+        var_member (StringVar): The variable for the member name
+        var_sum_debit (StringVar): The variable for the sum of debit
+        var_sum_credit (StringVar): The variable for the sum of credit
+        details (List[TransferSlipDetailRow]): The detail rows
+        register (Callable): The callback for the register button
+        account_titles (Dict[int, str]): The account titles for the combobox
+    """
 
     DETAIL_HEADER_ROW_COUNT = 1
 
-    def __init__(self, master):
+    def __init__(
+        self, master, register_callback: Callable, account_titles: Dict[int, str]
+    ):
+        """Constructor
+
+        Args:
+            master: The master widget for the view
+            register_callback: The callback for the register button
+            account_titles: The account titles for the combobox
+        """
         super().__init__(master)
         # Variables
         self.var_member = tk.StringVar()
         self.var_sum_debit = tk.StringVar()
         self.var_sum_credit = tk.StringVar()
-        # Window
-        self.window: bw.WrappedToplevel
-        # Details
         self.details: List[TransferSlipDetailRow]
-        # Callback
-        self.register: Callable = None
+        self.register = register_callback
+        self.account_titles = account_titles
 
     def create_widgets(self):
-        # ブロック節
-        if self.register is None:
-            raise ValueError("register is not set")
-
         # *****ウィンドウ*****
         self.window = bw.WrappedToplevel(self.master)
-
         # *****外枠*****
         frame_outer = bw.WrappedTFrame(self.master)
         frame_outer.grid(column=0, row=0)
@@ -273,13 +156,13 @@ class TransferSlipView(BaseView):
         row_index = self.details.index(new_detail) + self.DETAIL_HEADER_ROW_COUNT
         self.details[-1].grid_items(row_index)
 
-    def set_register_command(self, callback: Callable):
-        """登録ボタンのコマンドを設定する
+    # def set_register_command(self, callback: Callable):
+    #     """登録ボタンのコマンドを設定する
 
-        Args:
-            callback (Callable): 登録ボタンのコマンド
-        """
-        self.register = callback
+    #     Args:
+    #         callback (Callable): 登録ボタンのコマンド
+    #     """
+    #     self.register = callback
 
 
 class TransferSlipDetailRow:
@@ -357,7 +240,3 @@ class TransferSlipDetailRow:
             validatecommand=self.cmd_valid_ammount.get_signature(),
             # style="transferslip_detail.TEntry",
         ).grid(column=4, row=row, sticky=NSEW)
-
-        # >>>>>DEBUG>>>>>
-
-        # <<<<<DEBUG<<<<<

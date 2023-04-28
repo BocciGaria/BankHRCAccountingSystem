@@ -15,6 +15,8 @@ class Account(base.BaseTableEntity):
         slip (IntegerField): Slip number
     """
 
+    table_name = "account"
+
     def __init__(self) -> None:
         super().__init__()
         field_factory = FieldFactory.get_instance()

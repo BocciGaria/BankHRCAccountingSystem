@@ -10,8 +10,8 @@ class TransferSlipController(BaseController):
     def __init__(self, master: bw.ITclComposite):
         super().__init__(master)
         self.model = TransferSlipModel()
-        self.view = TransferSlipView(master)
-        self.view.set_register_command(self.register_transfer_slip)
+        account_titles = self.model.get_account_titles()
+        self.view = TransferSlipView(master, self.register_transfer_slip)
         self.view.create_widgets()
 
     def run(self):

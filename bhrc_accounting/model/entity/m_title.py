@@ -2,7 +2,7 @@ from . import base
 from ..db.factory import FieldFactory
 
 
-class MTitleModel(base.BaseTableEntity):
+class MTitle(base.BaseTableEntity):
     """Model class for accounting titles master table
 
     Attributes:

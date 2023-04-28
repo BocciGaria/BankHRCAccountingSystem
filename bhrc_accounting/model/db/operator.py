@@ -12,7 +12,7 @@ class IOperator(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def get_all(self, entity_type: ITableEntity):
+    def get_all(self, entity_type: Type[ITableEntity]) -> Iterable[ITableEntity]:
         """Get all records
 
         Args:
@@ -24,7 +24,7 @@ class IOperator(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def get_for_primary_key(self, entity_type: ITableEntity):
+    def get_for_primary_key(self, entity_type: Type[ITableEntity]) -> ITableEntity:
         """Get a record for primary key
 
         Args:
@@ -36,7 +36,7 @@ class IOperator(metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def save(self, entity_type: ITableEntity):
+    def save(self, entity: ITableEntity) -> None:
         """Save models
 
         Args:
