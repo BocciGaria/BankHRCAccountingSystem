@@ -62,8 +62,18 @@ class FieldFactory:
 class OperatorFactory:
     """Factory for creating database operators"""
 
+    __instance = None
+
+    def __new__(cls) -> Self:
+        if cls.__instance is None:
+            cls.__instance = super().__new__(cls)
+        return cls.__instance
+
     @classmethod
-    def get_operator(cls, connection_string: str) -> IOperator:
+    def get_instance(cls) -> Self:
+        return cls()
+
+    def get_operator(self, connection_string: str) -> IOperator:
         """Get operator instance"""
         if DB == "sqlite3":
             return sqlite3operator.Sqlite3Operator(connection_string)

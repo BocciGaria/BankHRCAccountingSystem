@@ -1,4 +1,5 @@
 from .base import BaseController
+from bhrc_accounting.model.transferslip import TransferSlipModel
 from bhrc_accounting.view.widget import base_widget as bw
 from bhrc_accounting.view.transferslip import TransferSlipView
 
@@ -8,6 +9,7 @@ class TransferSlipController(BaseController):
 
     def __init__(self, master: bw.ITclComposite):
         super().__init__(master)
+        self.model = TransferSlipModel()
         self.view = TransferSlipView(master)
         self.view.set_register_command(self.register_transfer_slip)
         self.view.create_widgets()

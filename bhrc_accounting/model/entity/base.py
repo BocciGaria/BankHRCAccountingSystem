@@ -10,5 +10,5 @@ class ITableEntity(metaclass=abc.ABCMeta):
     table_name: str = None
 
 
-class BaseEntity(ITableEntity):
+class BaseTableEntity(ITableEntity):
     """Base class for table entities"""

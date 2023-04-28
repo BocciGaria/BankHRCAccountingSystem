@@ -1,8 +1,8 @@
 from . import base
-from .db.sqlite3 import field
+from ..db.factory import FieldFactory
 
 
-class slip(base.BaseModel):
+class slip(base.BaseTableEntity):
     """Model class for slip table
 
     Attributes:
@@ -14,10 +14,11 @@ class slip(base.BaseModel):
 
     def __init__(self) -> None:
         super().__init__()
-        self.id = self.field_factory.get_8bits_integer_field()
-        self.first_date = self.field_factory.get_date_field()
-        self.last_date = self.field_factory.get_date_field()
-        self.employee = self.field_factory.get_text_field()
+        field_factory = FieldFactory.get_instance()
+        self.id = field_factory.get_8bits_integer_field()
+        self.first_date = field_factory.get_date_field()
+        self.last_date = field_factory.get_date_field()
+        self.employee = field_factory.get_text_field()
         self.fields = dict(
             id=self.id,
             first_date=self.first_date,
