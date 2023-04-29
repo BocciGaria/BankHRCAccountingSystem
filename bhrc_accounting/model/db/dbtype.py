@@ -27,22 +27,25 @@ class IDbType(metaclass=abc.ABCMeta):
 class BaseDbType(IDbType):
     """データベースデータ型基底クラス"""
 
-    __type: Type[Any]
+    _type: Type[Any] = None
 
     def __init__(self, value: Any) -> None:
         if self.validate(value):
             raise ValueError("引数 value の値または型が不正です。")
-        self.__value = self.__type(value)
+        self._value = self._type(value)
+
+    def __str__(self) -> str:
+        return str(self._value)
 
     @property
     def value(self) -> Any:
-        return self.__value
+        return self._value
 
     def validate(self, value: Any) -> bool:
         try:
-            self.__type(value)
+            self._type(value)
         except ValueError:
-            return False
+            return True
         except TypeError:
-            return False
-        return True
+            return True
+        return False
