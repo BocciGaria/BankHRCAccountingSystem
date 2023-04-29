@@ -20,7 +20,7 @@ class Sqlite3Operator(BaseOperator):
         for record in query_result.fetchall():
             entity = entity_type()
             index = 0
-            for field in entity.fields:
+            for field in entity.fields.values():
                 field.set_value(record[index])
                 index += 1
             result.append(entity)

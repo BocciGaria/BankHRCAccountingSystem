@@ -1,6 +1,6 @@
 from typing import *
 
-from .field import IField
+from .field import IField, FieldName
 from .operator import IOperator
 from .mysql import field as mysqlfield
 from .sqlite3 import (
@@ -26,37 +26,37 @@ class FieldFactory:
 
     def __init__(self) -> None:
         self.__8bits_integer_fields = dict(
-            sqlite3=lambda: sqlite3field.IntegerField(),
-            mysql=lambda: mysqlfield.BigIntField(),
+            sqlite3=lambda x: sqlite3field.IntegerField(x),
+            mysql=lambda x: mysqlfield.BigIntField(x),
         )
         self.__text_fields = dict(
-            sqlite3=lambda: sqlite3field.TextField(),
-            mysqlfield=lambda: mysqlfield.TextField(),
+            sqlite3=lambda x: sqlite3field.TextField(x),
+            mysqlfield=lambda x: mysqlfield.TextField(x),
         )
         self.__date_fields = dict(
-            sqlite3=lambda: sqlite3field.DateField(),
-            mysql=lambda: mysqlfield.DateField(),
+            sqlite3=lambda x: sqlite3field.DateField(x),
+            mysql=lambda x: mysqlfield.DateField(x),
         )
         self.__boolean_fields = dict(
-            sqlite3=lambda: sqlite3field.BooleanField(),
-            mysql=lambda: mysqlfield.TinyIntField(),
+            sqlite3=lambda x: sqlite3field.BooleanField(x),
+            mysql=lambda x: mysqlfield.TinyIntField(x),
         )
 
-    def get_8bits_integer_field(self) -> IField:
+    def get_8bits_integer_field(self, field_name: FieldName) -> IField:
         """Get 8bits integer field"""
-        return self.__8bits_integer_fields[DB]()
+        return self.__8bits_integer_fields[DB](field_name)
 
-    def get_text_field(self) -> IField:
+    def get_text_field(self, field_name: FieldName) -> IField:
         """Get text field"""
-        return self.__text_fields[DB]()
+        return self.__text_fields[DB](field_name)
 
-    def get_date_field(self) -> IField:
+    def get_date_field(self, field_name: FieldName) -> IField:
         """Get date field"""
-        return self.__date_fields[DB]()
+        return self.__date_fields[DB](field_name)
 
-    def get_boolean_field(self) -> IField:
+    def get_boolean_field(self, field_name: FieldName) -> IField:
         """Get boolean field"""
-        return self.__boolean_fields[DB]()
+        return self.__boolean_fields[DB](field_name)
 
 
 class OperatorFactory:

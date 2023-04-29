@@ -1,7 +1,7 @@
 from typing import *
 
 from . import dbtype
-from ..field import BaseField
+from ..field import BaseField, FieldName
 
 
 class TextField(BaseField):
@@ -10,7 +10,9 @@ class TextField(BaseField):
     データ型が文字列のカラムに対応するフィールドオブジェクトを表現します。
     """
 
-    __type = dbtype.Text
+    def __init__(self, field_name: FieldName) -> None:
+        super().__init__(field_name)
+        self._type = dbtype.Text
 
 
 class IntegerField(BaseField):
@@ -19,7 +21,9 @@ class IntegerField(BaseField):
     データ型が符号付き整数のカラムに対応するフィールドオブジェクトを表現します。
     """
 
-    __type = dbtype.Integer
+    def __init__(self, field_name: FieldName) -> None:
+        super().__init__(field_name)
+        self._type = dbtype.Integer
 
 
 class RealField(BaseField):
@@ -28,7 +32,9 @@ class RealField(BaseField):
     データ型が8バイト浮動小数点数のカラムに対応するフィールドオブジェクトを表現します。
     """
 
-    __type = dbtype.Real
+    def __init__(self, field_name: FieldName) -> None:
+        super().__init__(field_name)
+        self._type = dbtype.Real
 
 
 class BlobField(BaseField):
@@ -37,7 +43,9 @@ class BlobField(BaseField):
     データ型がバイナリデータのカラムに対応するフィールドオブジェクトを表現します。
     """
 
-    __type = dbtype.Blob
+    def __init__(self, field_name: FieldName) -> None:
+        super().__init__(field_name)
+        self._type = dbtype.Blob
 
 
 class BooleanField(BaseField):
@@ -46,7 +54,9 @@ class BooleanField(BaseField):
     データ型が真偽値のカラムに対応するフィールドオブジェクトを表現します。
     """
 
-    __type = dbtype.Boolean
+    def __init__(self, field_name: FieldName) -> None:
+        super().__init__(field_name)
+        self._type = dbtype.Boolean
 
 
 class DateField(BaseField):
@@ -55,4 +65,6 @@ class DateField(BaseField):
     データ型が日付のカラムに対応するフィールドオブジェクトを表現します。
     """
 
-    __type = dbtype.Date
+    def __init__(self, field_name: FieldName) -> None:
+        super().__init__(field_name)
+        self._type = dbtype.Date

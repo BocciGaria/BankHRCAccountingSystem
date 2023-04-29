@@ -4,6 +4,10 @@ from typing import *
 from . import dbtype
 
 
+class FieldName(str):
+    """Field name value object"""
+
+
 class IField(metaclass=abc.ABCMeta):
     """フィールドインターフェース
 
@@ -17,6 +21,16 @@ class IField(metaclass=abc.ABCMeta):
 
         Returns:
             Type[IDbType]: フィールドのデータ型
+        """
+        raise NotImplementedError()
+
+    @property
+    @abc.abstractproperty
+    def field_name(self) -> FieldName:
+        """フィールド名
+
+        Returns:
+            FieldName: フィールド名
         """
         raise NotImplementedError()
 
@@ -45,16 +59,29 @@ class BaseField(IField):
     フィールド具象クラスの要求に対する標準処理、その他のインターフェースを定義します。
     """
 
-    __type: Type[dbtype.IDbType]
+    def __init__(self, field_name: FieldName) -> None:
+        self._type: Type[dbtype.IDbType] = None
+        self._field_name = field_name
+        self._value: dbtype.IDbType = None
 
     @property
     def type(self) -> Type[dbtype.IDbType]:
-        return self.__type
+        if self._type is None:
+            raise ValueError("The db type of this field is not set.")
+        return self._type
+
+    @property
+    def field_name(self) -> FieldName:
+        if self._field_name is None:
+            raise ValueError("The field name of this field is not set.")
+        return self._field_name
 
     def get_value(self) -> dbtype.IDbType:
-        if self.__value is None:
-            raise ValueError("値が設定されていません。")
-        return self.__value
+        if self._value is None:
+            raise ValueError("The value of this field is not set.")
+        return self._value
 
     def set_value(self, value: Any) -> None:
-        self.__value = self.__type(value)
+        if type(value) is self._type:
+            self._value = value
+        self._value = self._type(value)

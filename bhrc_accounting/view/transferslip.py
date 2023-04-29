@@ -8,7 +8,7 @@ from bhrc_accounting import config
 from bhrc_accounting.controller.command import command
 from .base import BaseView
 from .widget import base_widget as bw
-from .widget.commandbar import CommandBar, ImageButtonCommandItem
+from .widget.commandbar import CommandItemName, CommandBar, ImageButtonCommandItem
 
 
 class TransferSlipView(BaseView):
@@ -19,6 +19,7 @@ class TransferSlipView(BaseView):
         var_member (StringVar): The variable for the member name
         var_sum_debit (StringVar): The variable for the sum of debit
         var_sum_credit (StringVar): The variable for the sum of credit
+        command_bar (CommandBar): The command bar
         details (List[TransferSlipDetailRow]): The detail rows
         register (Callable): The callback for the register button
         account_titles (Dict[int, str]): The account titles for the combobox
@@ -26,14 +27,11 @@ class TransferSlipView(BaseView):
 
     DETAIL_HEADER_ROW_COUNT = 1
 
-    def __init__(
-        self, master, register_callback: Callable, account_titles: Dict[int, str]
-    ):
+    def __init__(self, master: bw.ITclComposite, account_titles: Dict[int, str]):
         """Constructor
 
         Args:
             master: The master widget for the view
-            register_callback: The callback for the register button
             account_titles: The account titles for the combobox
         """
         super().__init__(master)
@@ -42,7 +40,6 @@ class TransferSlipView(BaseView):
         self.var_sum_debit = tk.StringVar()
         self.var_sum_credit = tk.StringVar()
         self.details: List[TransferSlipDetailRow]
-        self.register = register_callback
         self.account_titles = account_titles
 
     def create_widgets(self):
@@ -54,21 +51,21 @@ class TransferSlipView(BaseView):
         frame_outer.columnconfigure(0, weight=1)
         frame_outer.rowconfigure(0, weight=1)
         # *****コマンドバー*****
-        cmd_bar = CommandBar(frame_outer)
-        cmd_bar.add_command(
+        self.command_bar = CommandBar(frame_outer)
+        self.command_bar.add_command_item(
             ImageButtonCommandItem(
+                CommandItemName("save"),
                 config.get_image_path("hard-drive-solid.png"),
-                self.register,
             )
         )
-        cmd_bar.add_command(
+        self.command_bar.add_command_item(
             ImageButtonCommandItem(
+                CommandItemName("insert_row"),
                 config.get_image_path("insert.png"),
-                self._insert_row,
             )
         )
-        cmd_bar.grid(column=0, row=0, sticky=NSEW)
-        cmd_bar.rowconfigure(0, weight=1)
+        self.command_bar.grid(column=0, row=0, sticky=NSEW)
+        self.command_bar.rowconfigure(0, weight=1)
         # *****ヘッダー部*****
         frame_header = bw.WrappedTFrame(frame_outer)
         frame_header.grid(column=0, row=1, sticky=NSEW)
@@ -115,8 +112,9 @@ class TransferSlipView(BaseView):
         # 明細部ボディ
         self.details = list()
         for i in range(0, 7):
-            self.details.append(TransferSlipDetailRow(frame_detail))
-            self.details[i].grid_items(i + self.DETAIL_HEADER_ROW_COUNT)
+            self.details.append(TransferSlipDetailRow(frame_detail, self.account_titles))
+            self.details[i].create_widgets()
+            self.details[i].grid_widgets(i + self.DETAIL_HEADER_ROW_COUNT)
         # 明細部フッター
         bw.WrappedTEntry(
             frame_detail,
@@ -148,13 +146,14 @@ class TransferSlipView(BaseView):
     def remove_widgets(self):
         self.window.grid_remove()
 
-    def _insert_row(self, *args):
-        """行挿入処理"""
-        master = self.details[0].parent
-        new_detail = TransferSlipDetailRow(master)
-        self.details.append(new_detail)
-        row_index = self.details.index(new_detail) + self.DETAIL_HEADER_ROW_COUNT
-        self.details[-1].grid_items(row_index)
+    # def _insert_row(self, *args):
+    #     """行挿入処理"""
+    #     master = self.details[0].parent
+    #     new_detail = TransferSlipDetailRow(master)
+    #     self.details.append(new_detail)
+    #     row_index = self.details.index(new_detail) + self.DETAIL_HEADER_ROW_COUNT
+    #     self.details[-1].create_widgets()
+    #     self.details[-1].grid_widgets(row_index)
 
     # def set_register_command(self, callback: Callable):
     #     """登録ボタンのコマンドを設定する
@@ -173,29 +172,31 @@ class TransferSlipDetailRow:
         parent (bw.ITclComposite): 明細行の各ウィジェットを直接配置する親ウィジェット
         cmd_valid_ammount (UDigitValidateCommand): 金額入力時の検証コマンド
         var_debit_amount (tk.StringVar): 借方金額変数
-        var_debit_item (tk.StringVar): 借方科目変数
+        var_debit_title (tk.StringVar): 借方科目変数
         var_summary (tk.StringVar): 摘要変数
-        var_credit_item (tk.StringVar): 貸方科目変数
+        var_credit_title (tk.StringVar): 貸方科目変数
         var_credit_amount (tk.StringVar): 貸方金額変数
     """
 
     WIDTHS = (12, 10, 40, 10, 12)
 
-    def __init__(self, parent: bw.ITclComposite):
+    def __init__(self, parent: bw.ITclComposite, account_titles: Dict[int, str]):
         """コンストラクタ
 
         Args:
             parent (tk.Widget): 明細行の各ウィジェットを直接配置する親ウィジェット
+            account_titles (Dict[int, str]): 科目IDと科目名の辞書
         """
         self.parent = parent
+        self.account_titles = account_titles
         self.cmd_valid_ammount = command.UDigitValidateCommand(parent)
         self.var_debit_amount = tk.StringVar()
-        self.var_debit_item = tk.StringVar()
+        self.var_debit_title = tk.StringVar()
         self.var_summary = tk.StringVar()
-        self.var_credit_item = tk.StringVar()
+        self.var_credit_title = tk.StringVar()
         self.var_credit_amount = tk.StringVar()
 
-    def grid_items(self, row):
+    def create_widgets(self):
         """明細行の各ウィジェットを配置する
 
         Args:
@@ -204,7 +205,7 @@ class TransferSlipDetailRow:
         ttk.Style().configure(
             "TCombobox", font="System 24", borderwidth=1, relief="solid"
         )
-        bw.WrappedTEntry(
+        self.debit_amount = bw.WrappedTEntry(
             self.parent,
             textvariable=self.var_debit_amount,
             width=self.WIDTHS[0],
@@ -212,26 +213,28 @@ class TransferSlipDetailRow:
             validate="key",
             validatecommand=self.cmd_valid_ammount.get_signature(),
             # style="transferslip_detail.TEntry",
-        ).grid(column=0, row=row, sticky=NSEW)
-        bw.WrappedTCombobox(
+        )
+        self.debit_item = bw.WrappedTCombobox(
             self.parent,
-            textvariable=self.var_debit_item,
+            textvariable=self.var_debit_title,
+            values=list(self.account_titles.values()),
             width=self.WIDTHS[1],
             font=("System", 18),
-        ).grid(column=1, row=row, sticky=NSEW)
-        bw.WrappedTEntry(
+        )
+        self.summary = bw.WrappedTEntry(
             self.parent,
             textvariable=self.var_summary,
             width=self.WIDTHS[2],
             font=("System", 18),
-        ).grid(column=2, row=row, sticky=NSEW)
-        bw.WrappedTCombobox(
+        )
+        self.credit_title = bw.WrappedTCombobox(
             self.parent,
-            textvariable=self.var_credit_item,
+            textvariable=self.var_credit_title,
+            values=list(self.account_titles.values()),
             width=self.WIDTHS[3],
             font=("System", 18),
-        ).grid(column=3, row=row, sticky=NSEW)
-        bw.WrappedTEntry(
+        )
+        self.credit_amount = bw.WrappedTEntry(
             self.parent,
             textvariable=self.var_credit_amount,
             width=self.WIDTHS[4],
@@ -239,4 +242,11 @@ class TransferSlipDetailRow:
             validate="key",
             validatecommand=self.cmd_valid_ammount.get_signature(),
             # style="transferslip_detail.TEntry",
-        ).grid(column=4, row=row, sticky=NSEW)
+        )
+
+    def grid_widgets(self, row: int):
+        self.debit_amount.grid(column=0, row=row, sticky=NSEW)
+        self.debit_item.grid(column=1, row=row, sticky=NSEW)
+        self.summary.grid(column=2, row=row, sticky=NSEW)
+        self.credit_title.grid(column=3, row=row, sticky=NSEW)
+        self.credit_amount.grid(column=4, row=row, sticky=NSEW)

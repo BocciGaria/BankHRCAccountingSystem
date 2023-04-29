@@ -9,4 +9,5 @@ class TransferSlipModel(BaseModel):
     """Model class for the transfer slip window"""
 
     def get_account_titles(self) -> Dict[int, str]:
-        account_titles = self.operator.get_all(MTitle)
+        m_titles: Iterable[MTitle] = self.operator.get_all(MTitle)
+        return {m_title.id.get_value(): m_title for m_title in m_titles}
