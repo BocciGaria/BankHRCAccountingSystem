@@ -10,6 +10,15 @@ class IField(metaclass=abc.ABCMeta):
     データベーステーブルフィールドオブジェクトが提供するインターフェースを定義します。
     """
 
+    @abc.abstractmethod
+    def __init__(self, initial_value: Any = None) -> None:
+        """コンストラクタ
+
+        Args:
+            initial_value (Any): 初期値
+        """
+        raise NotImplementedError()
+
     @property
     @abc.abstractproperty
     def type(self) -> Type[dbtype.IDbType]:
@@ -45,16 +54,21 @@ class BaseField(IField):
     フィールド具象クラスの要求に対する標準処理、その他のインターフェースを定義します。
     """
 
-    __type: Type[dbtype.IDbType]
+    _type: Type[dbtype.IDbType]
+
+    def __init__(self, initial_value: Any = None) -> None:
+        self._value = None
+        if initial_value is not None:
+            self.set_value(initial_value)
 
     @property
     def type(self) -> Type[dbtype.IDbType]:
-        return self.__type
+        return self._type
 
     def get_value(self) -> dbtype.IDbType:
-        if self.__value is None:
+        if self._value is None:
             raise ValueError("値が設定されていません。")
-        return self.__value
+        return self._value
 
     def set_value(self, value: Any) -> None:
-        self.__value = self.__type(value)
+        self._value = self._type(value)

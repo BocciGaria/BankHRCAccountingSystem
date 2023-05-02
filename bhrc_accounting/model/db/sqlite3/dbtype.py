@@ -7,7 +7,7 @@ from ..dbtype import BaseDbType
 class Text(BaseDbType):
     """Sqlite3の文字列型"""
 
-    __type = str
+    _type = str
 
     @property
     def name(self) -> str:
@@ -17,7 +17,7 @@ class Text(BaseDbType):
 class Real(BaseDbType):
     """Sqlite3の8バイト浮動小数型"""
 
-    __type = float
+    _type = float
 
     def name(self) -> str:
         return "real"
@@ -26,7 +26,7 @@ class Real(BaseDbType):
 class Integer(BaseDbType):
     """Sqlite3の整数型"""
 
-    __type = int
+    _type = int
 
     def name(self) -> str:
         return "integer"
@@ -35,7 +35,7 @@ class Integer(BaseDbType):
 class Blob(BaseDbType):
     """Sqlite3のバイナリ型"""
 
-    __type = bytes
+    _type = bytes
 
     def name(self) -> str:
         return "blob"
@@ -44,14 +44,14 @@ class Blob(BaseDbType):
 class Boolean(BaseDbType):
     """Sqlite3の真偽型"""
 
-    __type = bool
+    _type = bool
 
     def __init__(self, value: Any) -> None:
         super().__init__(value)
-        if self.__value:
-            self.__value = 1
+        if self._value:
+            self._value = 1
         else:
-            self.__value = 0
+            self._value = 0
 
     def name(self) -> str:
         return "boolean"
@@ -60,11 +60,15 @@ class Boolean(BaseDbType):
 class Date(BaseDbType):
     """Sqlite3の日付型"""
 
-    __type = datetime.date
+    _type = datetime.date
 
     def __init__(self, value: Any) -> None:
-        super().__init__(value)
-        self.__value = str(self.__value)
+        if self.validate(value):
+            raise ValueError("引数 value の値または型が不正です。")
+        try:
+            self._value = str(datetime.datetime.strptime(value, "%Y-%m-%d").date())
+        except ValueError:
+            self._value = str(datetime.datetime.today().date())
 
     def name(self) -> str:
         return "date"

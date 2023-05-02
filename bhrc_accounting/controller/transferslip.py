@@ -1,6 +1,7 @@
 from .base import BaseController
+from bhrc_accounting.model.account import Account
 from bhrc_accounting.view.widget import base_widget as bw
-from bhrc_accounting.view.transferslip import TransferSlipView
+from bhrc_accounting.view.transferslip import TransferSlipView, TransferSlipDetailRow
 
 
 class TransferSlipController(BaseController):
@@ -20,12 +21,44 @@ class TransferSlipController(BaseController):
 
     def register_transfer_slip(self):
         count = 0
+        accounts = []
         for detail in self.view.details:
+            self.validate_detail(detail)
             count += 1
-            print(f"========== Detail {count} ==========")
-            print(f"Debit item      : {detail.var_debit_item}")
-            print(f"Debit ammount : {detail.var_credit_amount}")
-            print(f"Credit item     : {detail.var_debit_item}")
-            print(f"Credit ammount: {detail.var_credit_amount}")
+            print(f"======= Detail {count} =======")
+            print(f"Debit title   : {detail.var_debit_title}")
+            print(f"Credit title  : {detail.var_debit_title}")
+            print(f"Amount        : {detail.var_credit_amount}")
             print(f"Summary       : {detail.var_summary}")
             print()
+            accounts.append(
+                Account(
+                    date=detail.var_date.get(),
+                    debit_title=detail.var_debit_title.get(),
+                    credit_title=detail.var_credit_title.get(),
+                    amount=detail.var_debit_amount.get(),
+                    description=detail.var_summary.get(),
+                    slip=self.view.var_slip_number.get(),
+                )
+            )
+        # TODO: ここでDBに登録する
+
+    def validate_detail(self, detail: TransferSlipDetailRow) -> bool:
+        """Validate the detail row
+
+        Args:
+            detail (TransferSlipDetailRow): The detail row to validate
+        """
+        if detail.var_date.get() == "":
+            raise ValueError("Date is empty")
+        if detail.var_debit_title.get() == "":
+            raise ValueError("Debit title is empty")
+        if detail.var_debit_amount.get() == "":
+            raise ValueError("Debit amount is empty")
+        if detail.var_credit_title.get() == "":
+            raise ValueError("Credit title is empty")
+        if detail.var_credit_amount.get() == "":
+            raise ValueError("Credit amount is empty")
+        if self.view.var_slip_number.get() == "":
+            raise ValueError("Slip number is empty")
+        return True

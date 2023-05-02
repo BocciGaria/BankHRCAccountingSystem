@@ -10,7 +10,7 @@ class TextField(BaseField):
     データ型が文字列のカラムに対応するフィールドオブジェクトを表現します。
     """
 
-    __type = dbtype.Text
+    _type = dbtype.Text
 
 
 class IntegerField(BaseField):
@@ -19,7 +19,7 @@ class IntegerField(BaseField):
     データ型が符号付き整数のカラムに対応するフィールドオブジェクトを表現します。
     """
 
-    __type = dbtype.Integer
+    _type = dbtype.Integer
 
 
 class RealField(BaseField):
@@ -28,7 +28,7 @@ class RealField(BaseField):
     データ型が8バイト浮動小数点数のカラムに対応するフィールドオブジェクトを表現します。
     """
 
-    __type = dbtype.Real
+    _type = dbtype.Real
 
 
 class BlobField(BaseField):
@@ -37,7 +37,7 @@ class BlobField(BaseField):
     データ型がバイナリデータのカラムに対応するフィールドオブジェクトを表現します。
     """
 
-    __type = dbtype.Blob
+    _type = dbtype.Blob
 
 
 class BooleanField(BaseField):
@@ -46,7 +46,7 @@ class BooleanField(BaseField):
     データ型が真偽値のカラムに対応するフィールドオブジェクトを表現します。
     """
 
-    __type = dbtype.Boolean
+    _type = dbtype.Boolean
 
 
 class DateField(BaseField):
@@ -55,4 +55,4 @@ class DateField(BaseField):
     データ型が日付のカラムに対応するフィールドオブジェクトを表現します。
     """
 
-    __type = dbtype.Date
+    _type = dbtype.Date

@@ -10,6 +10,10 @@ class IModel(metaclass=abc.ABCMeta):
     """
 
     @abc.abstractmethod
+    def __init__(self, **kwargs) -> None:
+        raise NotImplementedError()
+
+    @abc.abstractmethod
     def get_all(self):
         """Get all records
 
@@ -43,5 +47,5 @@ class IModel(metaclass=abc.ABCMeta):
 class BaseModel(IModel):
     """Base class for models"""
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.field_factory = FieldFactory.get_instance()
