@@ -81,12 +81,24 @@ class TransferSlipView(BaseView):
             font=("System", 32, "underline"),
             anchor=CENTER,
         ).grid(column=0, row=0, rowspan=2, sticky=NSEW)
+        frame_slip_number = bw.WrappedTFrame(frame_header)
+        frame_slip_number.grid(column=1, row=0, sticky=NSEW)
+        bw.WrappedTLabel(
+            frame_slip_number,
+            text="No.",
+        ).grid(column=0, row=0, sticky=NSEW)
+        bw.WrappedTEntry(
+            frame_slip_number,
+            textvariable=self.var_slip_number,
+            validate="key",
+            validatecommand=command.UDigitValidateCommand(self.master).get_signature(),
+        ).grid(column=1, row=0, sticky=NSEW)
         bw.WrappedTLabel(
             frame_header,
             text=date.today().strftime("%Y/%m/%d"),
             font=("System", 24),
             anchor=CENTER,
-        ).grid(column=1, row=0, rowspan=2, sticky=NSEW)
+        ).grid(column=1, row=1, sticky=NSEW)
         bw.WrappedTLabel(
             frame_header,
             text="記入者",
