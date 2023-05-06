@@ -1,4 +1,5 @@
 import abc
+import re
 import tkinter as tk
 from tkinter.constants import *
 from typing import Any, Type
@@ -50,7 +51,8 @@ class ValidateCommand(ICommand):
     """入力チェック抽象クラス"""
 
     def __init__(self, client: bw.ITclComposite = None, receiver: Any = None) -> None:
-        self.cmd_str = client.get_root().register(self.execute)
+        self.root = client.get_root()
+        self.cmd_str = self.root.register(self.execute)
 
     def get_signature(self) -> CommandSignature:
         return (self.cmd_str, "%d", "%i", "%P", "%s", "%S", "%v", "%V", "%W")
@@ -66,11 +68,11 @@ class ValidateCommand(ICommand):
         V: ValidateCmdOption,
         w: WidgetName,
     ) -> bool:
-        super().execute()
+        self.widget = self.root.nametowidget(w)
 
 
 class DigitValidateCommand(ValidateCommand):
-    """数値入力コマンドクラス"""
+    """数値入力バリデーションコマンドクラス"""
 
     def execute(
         self,
@@ -84,6 +86,29 @@ class DigitValidateCommand(ValidateCommand):
         w: WidgetName,
     ) -> bool:
         return P.isdigit()
+
+
+class DateValidateCommand(ValidateCommand):
+    """日付入力バリデーションコマンドクラス"""
+
+    def execute(
+        self,
+        d: InputAction,
+        i: Index,
+        P: str,
+        s: str,
+        S: str,
+        v: ValidateCmdOption,
+        V: ValidateCmdOption,
+        w: WidgetName,
+    ) -> bool:
+        super().execute(d, i, P, s, S, v, V, w)
+        result = bool(re.match(r"^\d{4}-\d{2}-\d{2}$", P))
+        if result:
+            self.widget.config(foreground="black")
+        else:
+            self.widget.config(foreground="red")
+        return result
 
 
 class UDigitValidateCommand(ValidateCommand):

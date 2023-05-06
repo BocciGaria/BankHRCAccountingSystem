@@ -30,6 +30,7 @@ class TransferSlipView(BaseView):
         super().__init__(master)
         # Variables
         self.var_slip_number = tk.StringVar()
+        self.var_date = tk.StringVar()
         self.var_member = tk.StringVar()
         self.var_sum_debit = tk.StringVar()
         self.var_sum_credit = tk.StringVar()
@@ -49,7 +50,7 @@ class TransferSlipView(BaseView):
         self.window = bw.WrappedToplevel(self.master)
 
         # *****外枠*****
-        frame_outer = bw.WrappedTFrame(self.master)
+        frame_outer = bw.WrappedTFrame(self.window)
         frame_outer.grid(column=0, row=0)
         frame_outer.columnconfigure(0, weight=1)
         frame_outer.rowconfigure(0, weight=1)
@@ -93,12 +94,22 @@ class TransferSlipView(BaseView):
             validate="key",
             validatecommand=command.UDigitValidateCommand(self.master).get_signature(),
         ).grid(column=1, row=0, sticky=NSEW)
+        frame_date = bw.WrappedTFrame(frame_header)
+        frame_date.grid(column=1, row=1, sticky=NSEW)
         bw.WrappedTLabel(
-            frame_header,
-            text=date.today().strftime("%Y/%m/%d"),
-            font=("System", 24),
+            frame_date,
+            text="日付 : ",
+            font=("System", 16),
             anchor=CENTER,
-        ).grid(column=1, row=1, sticky=NSEW)
+        ).grid(column=0, row=0, sticky=NSEW)
+        bw.WrappedTEntry(
+            frame_date,
+            textvariable=self.var_date,
+            validate="focusout",
+            validatecommand=command.DateValidateCommand(self.master).get_signature(),
+            font=("System", 24),
+        ).grid(column=1, row=0, sticky=NSEW)
+        self.var_date.set(date.today().strftime("%Y-%m-%d"))
         bw.WrappedTLabel(
             frame_header,
             text="記入者",
@@ -202,7 +213,6 @@ class TransferSlipDetailRow:
         """
         self.parent = parent
         self.cmd_valid_ammount = command.UDigitValidateCommand(parent)
-        self.var_date = tk.StringVar()
         self.var_debit_amount = tk.StringVar()
         self.var_debit_title = tk.StringVar()
         self.var_summary = tk.StringVar()
