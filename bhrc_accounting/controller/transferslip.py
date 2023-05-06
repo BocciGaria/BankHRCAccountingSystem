@@ -27,16 +27,18 @@ class TransferSlipController(BaseController):
             count += 1
             print(f"======= Detail {count} =======")
             print(f"Debit title   : {detail.var_debit_title}")
-            print(f"Credit title  : {detail.var_debit_title}")
-            print(f"Amount        : {detail.var_credit_amount}")
+            print(f"Debit amount  : {detail.var_debit_amount}")
+            print(f"Credit title  : {detail.var_credit_title}")
+            print(f"Credit amount : {detail.var_credit_amount}")
             print(f"Summary       : {detail.var_summary}")
             print()
             accounts.append(
                 Account(
-                    date=detail.var_date.get(),
+                    date=self.view.var_date.get(),
                     debit_title=detail.var_debit_title.get(),
                     credit_title=detail.var_credit_title.get(),
-                    amount=detail.var_debit_amount.get(),
+                    credit_amount=detail.var_credit_amount,
+                    debit_amount=detail.var_debit_amount.get(),
                     description=detail.var_summary.get(),
                     slip=self.view.var_slip_number.get(),
                 )
@@ -49,7 +51,7 @@ class TransferSlipController(BaseController):
         Args:
             detail (TransferSlipDetailRow): The detail row to validate
         """
-        if detail.var_date.get() == "":
+        if self.view.var_date.get() == "":
             raise ValueError("Date is empty")
         if detail.var_debit_title.get() == "":
             raise ValueError("Debit title is empty")

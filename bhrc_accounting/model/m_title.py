@@ -12,7 +12,7 @@ class MTitleModel(base.BaseModel):
 
     def __init__(self) -> None:
         super().__init__()
-        self.id = self.field_factory.get_8bits_integer_field()
+        self.id = self.field_factory.get_8bytes_integer_field()
         self.name = self.field_factory.get_text_field()
         self.is_active = self.field_factory.get_boolean_field()
         self.fields = dict(
