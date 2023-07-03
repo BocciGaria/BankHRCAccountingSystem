@@ -30,7 +30,7 @@ class BaseDbType(IDbType):
     _type: Type[Any]
 
     def __init__(self, value: Any) -> None:
-        if self.validate(value):
+        if not self.validate(value):
             raise ValueError("引数 value の値または型が不正です。")
         self._value = self._type(value)
 

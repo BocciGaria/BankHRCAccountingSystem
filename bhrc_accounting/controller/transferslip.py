@@ -37,7 +37,7 @@ class TransferSlipController(BaseController):
                     date=self.view.var_date.get(),
                     debit_title=detail.var_debit_title.get(),
                     credit_title=detail.var_credit_title.get(),
-                    credit_amount=detail.var_credit_amount,
+                    credit_amount=detail.var_credit_amount.get(),
                     debit_amount=detail.var_debit_amount.get(),
                     description=detail.var_summary.get(),
                     slip=self.view.var_slip_number.get(),
