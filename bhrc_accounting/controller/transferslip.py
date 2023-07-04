@@ -22,7 +22,10 @@ class TransferSlipController(BaseController):
     def register_transfer_slip(self):
         count = 0
         accounts = []
+        self.validate_slip()
         for detail in self.view.details:
+            if self.is_blanc(detail):
+                continue
             self.validate_detail(detail)
             count += 1
             print(f"======= Detail {count} =======")
@@ -45,22 +48,58 @@ class TransferSlipController(BaseController):
             )
         # TODO: ここでDBに登録する
 
+    def validate_slip(self) -> bool:
+        """Validate the slip header
+
+        Raises:
+            ValueError: When the slip header is invalid
+        """
+        if self.view.var_date.get() == "":
+            self.popup_error("日付が空欄です。")
+            return False
+        if self.view.var_slip_number.get() == "":
+            self.popup_error("伝票番号が空欄です。")
+            return False
+        return True
+
+    def is_blanc(self, detail: TransferSlipDetailRow) -> bool:
+        """Check if the detail row is blanc"""
+
+        return (
+            detail.var_debit_title.get() == ""
+            and detail.var_debit_amount.get() == ""
+            and detail.var_credit_title.get() == ""
+            and detail.var_credit_amount.get() == ""
+            and detail.var_summary.get() == ""
+        )
+
     def validate_detail(self, detail: TransferSlipDetailRow) -> bool:
         """Validate the detail row
 
         Args:
             detail (TransferSlipDetailRow): The detail row to validate
         """
-        if self.view.var_date.get() == "":
-            raise ValueError("Date is empty")
         if detail.var_debit_title.get() == "":
-            raise ValueError("Debit title is empty")
+            self.popup_error("借方科目が空欄です。")
+            return False
         if detail.var_debit_amount.get() == "":
-            raise ValueError("Debit amount is empty")
+            self.popup_error("借方金額が空欄です。")
+            return False
         if detail.var_credit_title.get() == "":
-            raise ValueError("Credit title is empty")
+            self.popup_error("貸方科目が空欄です。")
+            return False
         if detail.var_credit_amount.get() == "":
-            raise ValueError("Credit amount is empty")
-        if self.view.var_slip_number.get() == "":
-            raise ValueError("Slip number is empty")
+            self.popup_error("貸方金額が空欄です。")
+            return False
+        if detail.var_summary.get() == "":
+            self.popup_error("摘要が空欄です。")
+            return False
         return True
+
+    def popup_error(self, message: str):
+        """Popup an error message
+
+        Args:
+            message (str): The error message to popup
+        """
+        self.view.popup_error(message)
